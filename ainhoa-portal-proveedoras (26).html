@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ainhoa Vintage · Portal Proveedoras</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f7;
+  --bg2: #f3f1ed;
+  --bg3: #ece9e3;
+  --border: #ddd9d0;
+  --dark: #1a1712;
+  --brown: #6b5c3e;
+  --gold: #9a7e42;
+  --text: #3a3228;
+  --muted: #9e8f7a;
+  --green: #4a7c59;
+  --green-bg: #edf5f0;
+  --red: #b85c5c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+
+/* HEADER */
+header {
+  background: var(--dark);
+  padding: 20px 24px 16px;
+  text-align: center;
+}
+.brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: #f0ead8;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-right: 0.18em;
+}
+.brand-sub {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: #e8d08a;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+main { max-width: 680px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* MODE SCREEN */
+#mode-screen { display: flex; flex-direction: column; align-items: center; padding-top: 40px; gap: 14px; }
+.mode-label { font-size: 11px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+.mode-options { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px; }
+.mode-btn {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  padding: 18px 20px;
+  text-align: left;
+  display: flex; align-items: center; gap: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.mode-btn:hover { border-color: var(--brown); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.mode-icon { font-size: 22px; }
+.mode-title { font-size: 13px; font-weight: 500; color: var(--dark); letter-spacing: 0.04em; display: block; }
+.mode-desc { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+
+/* LOGIN */
+#login-screen, #admin-login-screen { display: none; flex-direction: column; align-items: center; padding-top: 40px; }
+.login-box {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 36px 32px;
+  width: 100%; max-width: 380px;
+  display: flex; flex-direction: column; gap: 18px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+.login-box h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--dark); text-align: center; }
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+.input-group label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+input[type="number"], input[type="text"], input[type="password"] {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--dark);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  padding: 11px 13px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+input:focus { border-color: var(--brown); }
+input::placeholder { color: var(--muted); }
+button.primary {
+  background: var(--dark);
+  border: none; border-radius: 10px;
+  color: #f0ead8;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em;
+  padding: 14px;
+  text-transform: uppercase; width: 100%;
+  transition: background 0.2s;
+}
+button.primary:hover { background: #2e2a22; }
+button.primary:disabled { background: var(--muted); cursor: not-allowed; }
+.error-msg { font-size: 12px; color: var(--red); text-align: center; min-height: 16px; }
+.back-link { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 11px; text-align: center; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
+
+/* DASHBOARD */
+#dashboard { display: none; }
+.dash-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; gap: 10px; }
+.prov-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--dark); }
+.prov-num { font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+button.logout {
+  background: none; border: 1px solid var(--border); border-radius: 10px;
+  color: var(--muted); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.14em;
+  padding: 7px 14px; text-transform: uppercase;
+  transition: border-color 0.2s;
+}
+button.logout:hover { border-color: var(--brown); color: var(--text); }
+
+/* SALDO CARD */
+.saldo-card {
+  background: var(--dark);
+  border-radius: 10px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+}
+.saldo-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #9e8f7a; margin-bottom: 6px; }
+.saldo-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: #f0ead8; line-height: 1; }
+.saldo-sub { font-size: 10px; color: #6b5c3e; margin-top: 4px; }
+.cobrado-value { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #7ab87e; }
+
+/* STATS */
+.resumen { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+@media (max-width: 400px) { .resumen { grid-template-columns: 1fr 1fr; } .resumen .card:last-child { grid-column: 1/-1; } }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.card-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.card-value { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--dark); line-height: 1; }
+.card-value.green { color: var(--green); }
+
+/* SECTION */
+.section-title {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.count-badge { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; font-size: 10px; color: var(--text); }
+
+/* FILTROS */
+.filtros { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.filtro-btn {
+  background: #fff; border: 1px solid var(--border); border-radius: 20px;
+  color: var(--muted); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.1em;
+  padding: 5px 14px; text-transform: uppercase; transition: all 0.2s;
+}
+.filtro-btn.active { background: var(--dark); border-color: var(--dark); color: #f0ead8; }
+
+/* PRENDAS */
+.prendas-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
+.prenda-item {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 13px 16px;
+  display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: start;
+  transition: border-color 0.2s;
+}
+.prenda-item:hover { border-color: var(--brown); }
+.prenda-cod { font-size: 10px; letter-spacing: 0.12em; color: var(--gold); font-weight: 500; text-transform: uppercase; margin-bottom: 3px; }
+.prenda-desc { font-size: 13px; color: var(--dark); line-height: 1.3; }
+.prenda-ganancia { font-size: 11px; color: var(--green); margin-top: 3px; }
+.prenda-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.prenda-precio { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--dark); white-space: nowrap; }
+.badge { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+.badge.vendida { background: var(--green-bg); color: var(--green); border: 1px solid #c0ddc9; }
+.badge.stock { background: var(--bg3); color: var(--muted); border: 1px solid var(--border); }
+
+/* PAGOS */
+.pagos-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.pago-item { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+.pago-fecha { font-size: 12px; color: var(--muted); }
+.pago-importe { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--green); }
+
+/* EMPTY */
+.empty-state { text-align: center; padding: 36px 20px; color: var(--muted); font-size: 13px; border: 1px dashed var(--border); border-radius: 10px; }
+
+/* LOADER */
+.loader { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 14px; }
+.spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.7s linear infinite; }
+.loader p { font-size: 11px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ADMIN */
+#admin-screen { display: none; }
+.nav-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+.nav-tab { background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.16em; margin-bottom: -1px; padding: 10px 18px; text-transform: uppercase; transition: all 0.2s; }
+.nav-tab.active { color: var(--dark); border-bottom-color: var(--dark); }
+.admin-form { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+.admin-form h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; color: var(--dark); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 400px) { .form-row { grid-template-columns: 1fr; } }
+.success-msg { font-size: 12px; color: var(--green); text-align: center; min-height: 16px; }
+.info-note { font-size: 11px; color: var(--muted); line-height: 1.7; padding: 0 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand" style="color:#fff;">ainhoa</div>
+  <div class="brand-sub" style="color:#f0ead8;margin-top:6px;">Espacio Proveedoras</div>
+</header>
+
+<main>
+
+<!-- MODO -->
+<div id="mode-screen">
+  <p class="mode-label">¿Cómo querés ingresar?</p>
+  <div class="mode-options">
+    <button class="mode-btn" onclick="showLogin('proveedora')">
+      <svg class="mode-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7.5-4.5-9.5-9C1 8.5 2.5 5 6 5c2 0 3.5 1.2 4 2.5C10.5 6.2 12 5 14 5c3.5 0 5 3.5 3.5 7-2 4.5-9.5 9-9.5 9z"/></svg>
+      <span class="mode-text">
+        <span class="mode-title">Soy proveedora</span>
+        <span class="mode-desc">Ver mis prendas y pagos</span>
+      </span>
+    </button>
+    <button class="mode-btn" onclick="showLogin('admin')">
+      <svg class="mode-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M2 12h20"/></svg>
+      <span class="mode-text">
+        <span class="mode-title">Administración</span>
+        <span class="mode-desc">Gestión interna · Ainhoa</span>
+      </span>
+    </button>
+  </div>
+</div>
+
+<!-- LOGIN PROVEEDORA -->
+<div id="login-screen">
+  <div class="login-box">
+    <h2 style="display:flex;align-items:center;justify-content:center;gap:8px;">Bienvenida <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="color:var(--brown);"><path d="M12 21s-7.5-4.5-9.5-9C1 8.5 2.5 5 6 5c2 0 3.5 1.2 4 2.5C10.5 6.2 12 5 14 5c3.5 0 5 3.5 3.5 7-2 4.5-9.5 9-9.5 9z"/></svg></h2>
+    <div class="input-group">
+      <label>Número de proveedora</label>
+      <input type="number" id="num-prov" placeholder="Ej: 103" min="1" onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <div class="input-group">
+      <label>Contraseña</label>
+      <input type="password" id="pass-prov" placeholder="••••••" onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <button class="primary" id="btn-login" onclick="doLogin()">Ingresar</button>
+    <div class="error-msg" id="login-error"></div>
+    <div style="text-align:center;font-size:11px;color:var(--muted);">¿Olvidaste tu contraseña? <a href="#" onclick="enviarWhatsappOlvido();return false;" style="color:var(--brown);text-decoration:underline;">Contactá a Ainhoa</a></div>
+    <button class="back-link" onclick="showMode()">← Volver</button>
+  </div>
+</div>
+
+<!-- LOGIN ADMIN -->
+<div id="admin-login-screen">
+  <div class="login-box">
+    <h2>Acceso administración</h2>
+    <div class="input-group">
+      <label>Contraseña</label>
+      <input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doAdminLogin()">
+    </div>
+    <button class="primary" onclick="doAdminLogin()">Ingresar</button>
+    <div class="error-msg" id="admin-login-error"></div>
+    <button class="back-link" onclick="showMode()">← Volver</button>
+  </div>
+</div>
+
+<!-- DASHBOARD PROVEEDORA -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div>
+      <div class="prov-name" id="dash-nombre"></div>
+      <div class="prov-num" id="dash-num"></div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="logout" onclick="recargarDashboard()" id="btn-refresh-dash">↻ Actualizar</button>
+      <button class="logout" onclick="doLogout()">Salir</button>
+    </div>
+  </div>
+
+  <div id="dash-loader" class="loader">
+    <div class="spinner"></div>
+    <p>Cargando tus prendas</p>
+  </div>
+
+  <div id="dash-content" style="display:none;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div style="background:#edf5f0;border:1px solid #c0ddc9;border-radius:10px;padding:28px 24px;">
+        <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#5a8a5e;margin-bottom:8px;">Valor potencial</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:var(--green);line-height:1;" id="saldo-potencial">$0</div>
+        <div style="font-size:10px;color:#5a8a5e;margin-top:6px;" id="saldo-porcentaje">si todo tu stock se vende</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:#edf5f0;border:1px solid #c0ddc9;border-radius:10px;padding:20px 24px;flex:1;">
+          <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#5a8a5e;margin-bottom:6px;">Ya cobrado</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--green);line-height:1;" id="saldo-cobrado">$0</div>
+        </div>
+        <div style="background:#f3f1ed;border:1px solid var(--border);border-radius:10px;padding:20px 24px;flex:1;">
+          <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Disponible a cobrar</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#6b5c3e;line-height:1;" id="saldo-pendiente">$0</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px;" id="saldo-sub"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resumen">
+      <div class="card">
+        <div class="card-label">Total prendas</div>
+        <div class="card-value" id="stat-total">—</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Vendidas</div>
+        <div class="card-value green" id="stat-vendidas">—</div>
+        <div style="font-size:10px;color:var(--green);margin-top:2px;" id="stat-porcentaje"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Publicadas</div>
+        <div class="card-value" id="stat-stock">—</div>
+      </div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:20px;">
+      <button class="nav-tab active" style="color:var(--dark);border-bottom:2px solid var(--dark);" onclick="setDashTab('prendas',this)">Mis prendas</button>
+      <button class="nav-tab" onclick="setDashTab('cobros',this)">Cobros</button>
+    </div>
+
+    <div id="dash-tab-prendas">
+      <div class="filtros">
+        <button class="filtro-btn active" onclick="setFiltro('todas',this)">Todas</button>
+        <button class="filtro-btn" onclick="setFiltro('vendidas',this)">Vendidas</button>
+        <button class="filtro-btn" onclick="setFiltro('stock',this)">En stock</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);">Prendas</span>
+        <span class="count-badge" id="count-label">0</span>
+      </div>
+      <div class="prendas-list" id="prendas-list"></div>
+    </div>
+
+    <div id="dash-tab-cobros" style="display:none;">
+      <div class="pagos-list" id="pagos-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <div class="dash-header">
+    <div>
+      <div class="prov-name">Administración</div>
+      <div class="prov-num">Ainhoa Vintage</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="logout" onclick="loadProveedoras()" id="btn-refresh-admin">↻ Actualizar</button>
+      <button class="logout" onclick="doLogout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="setAdminTab('registrar',this)">Pagos</button>
+    <button class="nav-tab" onclick="setAdminTab('buscar',this)">Buscar proveedora</button>
+    <button class="nav-tab" onclick="setAdminTab('pagos',this)">Todos los pagos</button>
+    <button class="nav-tab" onclick="setAdminTab('ingresos',this)">Ingresos</button>
+    <button class="nav-tab" onclick="setAdminTab('caja',this)">💰 Caja</button>
+  </div>
+
+  <div id="admin-tab-registrar">
+    <div class="admin-form" style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="margin:0;">Proveedoras con saldo pendiente</h3>
+        <button class="logout" onclick="cargarPagosPendientes()">↻</button>
+      </div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;">Tocá una proveedora para completar sus datos abajo y registrarle el pago.</p>
+    </div>
+    <div id="pendientes-list" style="margin-bottom:20px;"></div>
+
+    <div class="admin-form" id="form-registrar-pago">
+      <h3>Registrar transferencia</h3>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Nro. Proveedora</label>
+          <input type="number" id="pago-nro" placeholder="103" oninput="buscarNombreAdmin()">
+        </div>
+        <div class="input-group">
+          <label>Nombre</label>
+          <input type="text" id="pago-nombre" readonly style="color:var(--brown);">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Importe ($)</label>
+          <input type="number" id="pago-importe" placeholder="15000">
+        </div>
+        <div class="input-group">
+          <label>Fecha</label>
+          <input type="date" id="pago-fecha">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Medio de pago</label>
+        <select id="pago-medio" style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:16px;padding:11px 13px;width:100%;">
+          <option value="Transferencia">Transferencia</option>
+          <option value="Efectivo">Efectivo</option>
+        </select>
+      </div>
+
+      <div id="prendas-pendientes-pago" style="display:none;margin-top:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <label style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);">Prendas pendientes de pago</label>
+          <span style="font-size:11px;color:var(--brown);cursor:pointer;text-decoration:underline;" onclick="toggleTodasPrendas()">Marcar/desmarcar todas</span>
+        </div>
+        <div id="prendas-pendientes-list" style="max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:8px;background:var(--bg2);"></div>
+        <div style="text-align:right;font-size:12px;color:var(--muted);margin-top:8px;">Total seleccionado: <strong style="color:var(--brown);" id="total-seleccionado">$0</strong></div>
+      </div>
+
+      <div class="input-group">
+        <label>Concepto (opcional)</label>
+        <input type="text" id="pago-codigo" placeholder="pago parcial, adelanto, etc">
+      </div>
+      <button class="primary" onclick="registrarPago()">Registrar pago</button>
+      <div class="success-msg" id="pago-success"></div>
+      <div class="error-msg" id="pago-error"></div>
+    </div>
+  </div>
+
+  <div id="admin-tab-buscar" style="display:none;">
+    <div class="admin-form">
+      <h3>Buscar proveedora</h3>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Número de proveedora</label>
+          <input type="number" id="busc-nro" placeholder="103" oninput="buscarNombreBusc()" onkeydown="if(event.key==='Enter') buscarAdmin()">
+        </div>
+        <div class="input-group">
+          <label>Nombre</label>
+          <input type="text" id="busc-nombre" readonly style="color:var(--brown);">
+        </div>
+      </div>
+      <button class="primary" onclick="buscarAdmin()">Ver saldo</button>
+    </div>
+    <div id="buscar-result"></div>
+
+    <div class="admin-form" style="margin-top:14px;">
+      <h3>Asignar / cambiar contraseña</h3>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;">Se guarda en la hoja <strong>BD_Prov</strong>, columna <strong>Contraseña</strong>, para el número de proveedora de arriba.</p>
+      <div class="input-group">
+        <label>Nueva contraseña</label>
+        <input type="text" id="contra-pass" placeholder="ej: flor2024">
+      </div>
+      <button class="primary" id="btn-guardar-contra" onclick="guardarContra()">Guardar contraseña</button>
+      <div class="success-msg" id="contra-success"></div>
+      <div class="error-msg" id="contra-error"></div>
+    </div>
+    <div class="info-note">
+      💡 Si una proveedora no tiene contraseña asignada en el sheet, no podrá ingresar. Asigná una antes de compartir el acceso.
+    </div>
+  </div>
+
+  <div id="admin-tab-pagos" style="display:none;">
+    <div class="admin-form">
+      <h3>Historial de pagos</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="input-group" style="flex:1;min-width:140px;">
+          <label>Filtrar por proveedora</label>
+          <input type="number" id="filtro-pagos-nro" placeholder="Todas" oninput="renderTodosPagos()">
+        </div>
+        <div class="input-group" style="flex:1;min-width:140px;">
+          <label>Período</label>
+          <select id="filtro-pagos-periodo" onchange="renderTodosPagos()" style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;width:100%;">
+            <option value="todos">Todos</option>
+            <option value="semana">Última semana</option>
+            <option value="mes">Último mes</option>
+          </select>
+        </div>
+        <button class="logout" onclick="cargarTodosPagos()" style="height:44px;white-space:nowrap;">↻ Actualizar</button>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <button class="logout" onclick="migrarPagosViejos()" id="btn-migrar" style="font-size:10px;">Migrar pagos antiguos de la hoja Pagos</button>
+        <span id="migrar-status" style="font-size:11px;color:var(--green);margin-left:10px;"></span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:11px;color:var(--muted);" id="pagos-resumen"></span>
+    </div>
+    <div id="todos-pagos-list" class="pagos-list"></div>
+  </div>
+
+  <div id="admin-tab-ingresos" style="display:none;">
+    <div class="admin-form">
+      <h3>Ingresos por ventas</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="input-group" style="flex:1;min-width:130px;">
+          <label>Desde</label>
+          <input type="date" id="ing-desde">
+        </div>
+        <div class="input-group" style="flex:1;min-width:130px;">
+          <label>Hasta</label>
+          <input type="date" id="ing-hasta">
+        </div>
+        <button class="logout" onclick="cargarIngresos()" style="height:44px;white-space:nowrap;">Filtrar</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center;">
+        <button class="filtro-btn" onclick="setIngPeriodo('semana',this)">Esta semana</button>
+        <button class="filtro-btn" onclick="setIngPeriodo('mes',this)">Este mes</button>
+        <button class="filtro-btn active" onclick="setIngPeriodo('todo',this)">Todo</button>
+        <select id="ing-mes-select" onchange="setIngMesElegido(this.value)" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:12px;padding:8px 10px;">
+          <option value="">Elegir mes...</option>
+        </select>
+      </div>
+    </div>
+    <div id="ing-resumen" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;"></div>
+    <div id="ing-lista"></div>
+  </div>
+
+  <div id="admin-tab-caja" style="display:none;">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+      <label style="font-size:11px;color:var(--muted);">Ver:</label>
+      <select id="caja-mes-select" onchange="cargarCaja()" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:12px;padding:8px 10px;">
+        <option value="">Últimos movimientos</option>
+      </select>
+    </div>
+    <!-- Resumen -->
+    <div id="caja-resumen" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;"></div>
+
+    <!-- Nuevo movimiento -->
+    <div class="admin-form" style="margin-bottom:14px;">
+      <h3>Cargar movimiento</h3>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Fecha</label>
+          <input type="date" id="caja-fecha">
+        </div>
+        <div class="input-group">
+          <label>Concepto</label>
+          <select id="caja-concepto" style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;width:100%;">
+            <option value="">Seleccionar</option>
+            <option value="Venta Tanda">Venta Tanda</option>
+            <option value="Ajuste caja">Ajuste caja</option>
+            <option value="Alquiler">Alquiler</option>
+            <option value="Honorarios">Honorarios</option>
+            <option value="Servicios">Servicios</option>
+            <option value="Impuestos">Impuestos</option>
+            <option value="Sueldos">Sueldos</option>
+            <option value="Pago comisiones">Pago comisiones</option>
+            <option value="Gastos varios">Gastos varios</option>
+            <option value="Insumos">Insumos</option>
+            <option value="Inversion">Inversión</option>
+            <option value="Retiro Utilidades">Retiro Utilidades</option>
+            <option value="Aporte de capital">Aporte de capital</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Sentido</label>
+          <select id="caja-flujo" style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;width:100%;">
+            <option value="Ingreso">Ingreso</option>
+            <option value="Egreso">Egreso</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Forma de pago</label>
+          <select id="caja-forma" style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;width:100%;">
+            <option value="Transferencia">Transferencia</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Monto ($)</label>
+          <input type="number" id="caja-monto" placeholder="0">
+        </div>
+        <div class="input-group">
+          <label>Período</label>
+          <input type="text" id="caja-periodo" placeholder="Ej: Julio">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Descripción</label>
+        <input type="text" id="caja-descripcion" placeholder="Ej: Pago alquiler julio">
+      </div>
+      <button class="primary" onclick="registrarCaja()" id="btn-caja">Registrar movimiento</button>
+      <div class="success-msg" id="caja-success" style="margin-top:8px;display:none;"></div>
+      <div class="error-msg" id="caja-error" style="margin-top:8px;"></div>
+    </div>
+
+    <!-- Pendiente de sincronizar -->
+    <div class="admin-form" style="margin-bottom:14px;">
+      <h3>⏳ Pendiente de cargar a Caja</h3>
+      <div id="pendiente-sinc-loading" style="font-size:13px;color:var(--muted);">Cargando...</div>
+      <div id="pendiente-sinc-contenido" style="display:none;">
+        <p style="font-size:13px;line-height:1.8;margin:0;">
+          <strong>Ventas sin sincronizar</strong> (desde <span id="pend-v-desde"></span>): <span id="pend-v-cant">0</span> ventas ·
+          Transferencia $<span id="pend-v-transf">0</span> · Efectivo $<span id="pend-v-efect">0</span>
+        </p>
+        <p style="font-size:13px;line-height:1.8;margin:0;">
+          <strong>Pagos a proveedoras sin sincronizar</strong> (desde <span id="pend-p-desde"></span>): <span id="pend-p-cant">0</span> pagos · Total $<span id="pend-p-total">0</span>
+        </p>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px;">La sincronización automática corre sola todos los domingos a la noche. Esto es lo que va a cargar la próxima vez (o lo que podés cargar vos ahora con "Sincronizar ventas" más abajo).</p>
+      </div>
+      <div id="pendiente-problemas-wrap" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+        <p style="font-size:13px;color:var(--red);margin:0 0 6px;"><strong>⚠️ <span id="pend-problemas-cant">0</span> ventas con datos faltantes</strong> — no se van a sincronizar hasta que las corrijas en la hoja Ventas:</p>
+        <div id="pend-problemas-lista" style="font-size:12px;color:var(--text);line-height:1.9;max-height:160px;overflow-y:auto;"></div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px;">¿Ya cargaste a mano en Caja todas las ventas y pagos hasta cierta fecha? Marcala acá para que no se dupliquen — <strong>esto no toca la hoja Caja</strong>, solo avisa "de acá para atrás ya está".</p>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+          <div class="input-group" style="max-width:180px;">
+            <label>Ya cargado hasta</label>
+            <input type="date" id="marcar-hasta">
+          </div>
+          <button class="logout" onclick="marcarYaCargado()" id="btn-marcar-hasta">Marcar como ya cargado</button>
+        </div>
+        <div class="success-msg" id="marcar-success" style="margin-top:8px;display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Sincronizar ventas -->
+    <div class="admin-form" style="margin-bottom:14px;">
+      <h3>Sincronizar ventas → Caja</h3>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Consolida las ventas del período como "Venta Tanda" en la hoja Caja Ainhoa.</p>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Desde</label>
+          <input type="date" id="sinc-desde">
+        </div>
+        <div class="input-group">
+          <label>Hasta</label>
+          <input type="date" id="sinc-hasta">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Descripción</label>
+          <input type="text" id="sinc-desc" placeholder="Ej: Tanda 7/7">
+        </div>
+        <div class="input-group">
+          <label>Período</label>
+          <input type="text" id="sinc-periodo" placeholder="Ej: Julio">
+        </div>
+      </div>
+      <button class="primary" onclick="sincronizarVentas()" id="btn-sinc">Sincronizar ventas</button>
+      <div class="success-msg" id="sinc-success" style="margin-top:8px;display:none;"></div>
+    </div>
+
+    <!-- Sincronizar pagos (catch-up manual, para pagos viejos previos a la automática) -->
+    <div class="admin-form" style="margin-bottom:14px;">
+      <h3>Sincronizar pagos a proveedoras → Caja</h3>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Para cargar pagos viejos (de antes de tener la sincronización automática) como un solo Egreso.</p>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Desde</label>
+          <input type="date" id="sincpago-desde">
+        </div>
+        <div class="input-group">
+          <label>Hasta</label>
+          <input type="date" id="sincpago-hasta">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="input-group">
+          <label>Descripción</label>
+          <input type="text" id="sincpago-desc" placeholder="Ej: Pagos atrasados junio">
+        </div>
+        <div class="input-group">
+          <label>Período</label>
+          <input type="text" id="sincpago-periodo" placeholder="Ej: Junio">
+        </div>
+      </div>
+      <button class="primary" onclick="sincronizarPagos()" id="btn-sincpago">Sincronizar pagos</button>
+      <div class="success-msg" id="sincpago-success" style="margin-top:8px;display:none;"></div>
+    </div>
+
+    <!-- Historial -->
+    <div class="section-title"><span>Últimos movimientos</span> <button class="logout" onclick="cargarCaja()">↻</button></div>
+    <div id="caja-lista"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ============================================================
+// CONFIGURACIÓN
+// ============================================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZbEeODB-LF71H32WLSJafEKpl4sQNzMEiNQ2nvxK6LjNc1pmX0NMEbKSi5s7EXk9d/exec';
+// La contraseña de admin ahora vive en la hoja Config del Sheet, no acá.
+// ============================================================
+
+let allData = { proveedoras: [], ingresos: [], ventas: [], pagos: [] };
+let prendas = [];
+let currentUser = null;
+let filtroActivo = 'todas';
+
+// ---- API ----
+async function api(action, params = {}) {
+  const url = new URL(APPS_SCRIPT_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+async function apiPost(data) {
+  const res = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+  return res.json();
+}
+
+// ---- HELPERS ----
+function formatFecha(str) {
+  if (!str) return '—';
+  const d = parseFechaFlexible(String(str));
+  if (!d) return String(str);
+  return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+}
+
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return '$' + Math.round(n).toLocaleString('es-AR');
+}
+
+function hide(ids) { ids.forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; }); }
+function show(id, d='flex') { const el = document.getElementById(id); if(el) el.style.display = (id==='dashboard'||id==='admin-screen') ? 'block' : d; }
+
+// ---- NAVEGACIÓN ----
+function showMode() {
+  hide(['login-screen','admin-login-screen','dashboard','admin-screen']);
+  show('mode-screen');
+}
+
+function showLogin(tipo) {
+  hide(['mode-screen','admin-login-screen','dashboard','admin-screen','login-screen']);
+  if (tipo === 'proveedora') {
+    show('login-screen');
+    setTimeout(() => document.getElementById('num-prov').focus(), 100);
+  } else {
+    show('admin-login-screen');
+    setTimeout(() => document.getElementById('admin-pass').focus(), 100);
+  }
+}
+
+// ---- LOGIN PROVEEDORA ----
+function enviarWhatsappOlvido() {
+  const num = document.getElementById('num-prov').value;
+  const mensaje = num
+    ? `Hola! Soy la proveedora #${num} y olvid\u00e9 mi contrase\u00f1a del portal. \u00bfMe ayud\u00e1s a recuperarla?`
+    : 'Hola! Olvid\u00e9 mi contrase\u00f1a del portal de proveedoras. \u00bfMe ayud\u00e1s a recuperarla?';
+  const url = `https://wa.me/5493816376544?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, '_blank');
+}
+
+async function doLogin() {
+  const num = parseInt(document.getElementById('num-prov').value);
+  const pass = document.getElementById('pass-prov').value.trim();
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+  errEl.textContent = '';
+
+  if (!num || !pass) { errEl.textContent = 'Completá número y contraseña.'; return; }
+
+  btn.disabled = true; btn.textContent = 'Cargando...';
+
+  try {
+    const data = await api('login', { num, pass });
+    if (!data.ok) {
+      errEl.textContent = data.error || 'Datos incorrectos.';
+      btn.disabled = false; btn.textContent = 'Ingresar';
+      return;
+    }
+    currentUser = { num, nombre: data.nombre, tipo: 'proveedora' };
+    allData = data.allData;
+    hide(['login-screen']);
+    show('dashboard', 'block');
+    renderDashboard();
+  } catch(e) {
+    errEl.textContent = 'Error de conexión. Intentá de nuevo.';
+    btn.disabled = false; btn.textContent = 'Ingresar';
+  }
+}
+
+// ---- LOGIN ADMIN ----
+async function doAdminLogin() {
+  const pass = document.getElementById('admin-pass').value;
+  const errEl = document.getElementById('admin-login-error');
+  errEl.textContent = '';
+  const btn = document.querySelector('#admin-login-screen button.primary');
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  try {
+    const res = await api('checkAdminPass', { pass });
+    if (!res || !res.ok) {
+      errEl.textContent = 'Contraseña incorrecta.';
+      btn.disabled = false; btn.textContent = 'Ingresar';
+      return;
+    }
+    currentUser = { tipo: 'admin' };
+    hide(['admin-login-screen']);
+    show('admin-screen', 'block');
+    setAdminFecha();
+    loadProveedoras();
+  } catch(e) {
+    errEl.textContent = 'Error de conexión. Intentá de nuevo.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Ingresar';
+  }
+}
+
+function doLogout() {
+  currentUser = null;
+  allData = { proveedoras: [], ingresos: [], ventas: [], pagos: [] };
+  document.getElementById('num-prov').value = '';
+  document.getElementById('pass-prov').value = '';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('btn-login').disabled = false;
+  document.getElementById('btn-login').textContent = 'Ingresar';
+  showMode();
+}
+
+// ---- DASHBOARD ----
+function renderDashboard() {
+  document.getElementById('dash-nombre').textContent = currentUser.nombre;
+  document.getElementById('dash-num').textContent = `Proveedora #${currentUser.num}`;
+  document.getElementById('dash-content').style.display = 'none';
+  document.getElementById('dash-loader').style.display = 'flex';
+
+  const num = currentUser.num;
+  const ingresos = allData.ingresos || [];
+  const ventas = allData.ventas || [];
+  const pagos = allData.pagos || [];
+
+  // Filtrar prendas de esta proveedora
+  const misIngresos = ingresos.filter(r => {
+    const cod = String(r['Código Unico'] || r['Codigo Unico'] || r['Código Único'] || '');
+    const m = cod.match(/^(\d+)-/);
+    return m && parseInt(m[1]) === num;
+  });
+
+  // Vendidas
+  const vendidosCod = new Set(
+    ventas.map(r => String(r['Código'] || r['Codigo'] || '').trim().toLowerCase())
+  );
+
+  prendas = misIngresos.map(r => {
+    const cod = String(r['Código Unico'] || r['Codigo Unico'] || r['Código Único'] || '').trim();
+    const vendida = vendidosCod.has(cod.toLowerCase());
+    // Solo usar Ganancia proveedor si la comisión está cargada
+    const comision = r['Comisión Ainhoa'] || r['Comision Ainhoa'] || r['Comisión Innova'] || 0;
+    const gananciaProv = comision ? (r['Ganancia proveedor'] || 0) : 0;
+    const tieneComision = !!comision;
+    return {
+      cod,
+      desc: r['Producto'] || '—',
+      talle: r['Talle'] || '',
+      precioVenta: r['Precio venta'] || 0,
+      gananciaProv,
+      tieneComision,
+      pagada: !!r['Pagada'],
+      vendida
+    };
+  });
+
+  const vendidas = prendas.filter(p => p.vendida);
+  const stock = prendas.filter(p => !p.vendida);
+  const totalGanancia = vendidas.reduce((s,p) => s + (p.gananciaProv||0), 0);
+
+  const misPagos = pagos.filter(r => {
+    const keys = Object.keys(r);
+    const nroKey = keys.find(k => k.toLowerCase().indexOf('nro') > -1 || k.toLowerCase().indexOf('prov') > -1);
+    return nroKey && parseInt(r[nroKey]) === num;
+  });
+  const totalCobrado = misPagos.reduce((s,r) => s + (parseFloat(r['Importe'])||0), 0);
+  const pendiente = totalGanancia - totalCobrado;
+
+  const totalStock = stock.reduce((s,p) => s + (p.gananciaProv||0), 0);
+  const potencial = totalGanancia + totalStock;
+
+  const pctVendido = prendas.length ? Math.round((vendidas.length / prendas.length) * 100) : 0;
+
+  const publicadas = stock.filter(p => p.precioVenta > 0);
+
+  document.getElementById('stat-total').textContent = prendas.length;
+  document.getElementById('stat-vendidas').textContent = vendidas.length;
+  document.getElementById('stat-porcentaje').textContent = pctVendido > 50 ? pctVendido + '% vendido' : '';
+  document.getElementById('stat-stock').textContent = publicadas.length;
+  document.getElementById('saldo-pendiente').textContent = fmt(pendiente);
+  document.getElementById('saldo-cobrado').textContent = fmt(totalCobrado);
+  document.getElementById('saldo-potencial').textContent = fmt(potencial);
+
+  renderPrendas('todas');
+  renderPagos(misPagos);
+
+  document.getElementById('dash-loader').style.display = 'none';
+  document.getElementById('dash-content').style.display = 'block';
+}
+
+async function recargarDashboard() {
+  const btn = document.getElementById('btn-refresh-dash');
+  btn.disabled = true; btn.textContent = 'Actualizando...';
+  try {
+    const [ing, ven, pag] = await Promise.all([
+      api('getSheet', { sheet: 'Ingresos' }),
+      api('getSheet', { sheet: 'Ventas' }),
+      api('getSheet', { sheet: 'Liquidaciones' })
+    ]);
+    allData = { ingresos: ing.rows||[], ventas: ven.rows||[], pagos: pag.rows||[] };
+    renderDashboard();
+  } catch(e) {
+    alert('Error al actualizar. Intentá de nuevo.');
+  } finally {
+    btn.disabled = false; btn.textContent = '↻ Actualizar';
+  }
+}
+
+function setDashTab(tab, btn) {
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.style.color = 'var(--dark)';
+  btn.style.borderBottom = '2px solid var(--dark)';
+  document.querySelectorAll('.nav-tab:not(.active)').forEach(b => {
+    b.style.color = '';
+    b.style.borderBottom = '';
+  });
+  document.getElementById('dash-tab-prendas').style.display = tab === 'prendas' ? 'block' : 'none';
+  document.getElementById('dash-tab-cobros').style.display = tab === 'cobros' ? 'block' : 'none';
+}
+
+function setFiltro(f, btn) {
+  filtroActivo = f;
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPrendas(f);
+}
+
+function renderPrendas(f) {
+  const lista = document.getElementById('prendas-list');
+  const countEl = document.getElementById('count-label');
+  let filtered = prendas;
+  if (f === 'vendidas') filtered = prendas.filter(p => p.vendida);
+  if (f === 'stock') filtered = prendas.filter(p => !p.vendida);
+  countEl.textContent = filtered.length;
+
+  if (!filtered.length) {
+    lista.innerHTML = '<div class="empty-state">Tus prendas están en proceso de clasificación.<br>¡Estate atenta a las novedades! 🤍</div>';
+    return;
+  }
+
+  lista.innerHTML = filtered.map(p => `
+    <div class="prenda-item">
+      <div>
+        <div class="prenda-cod">${p.cod}</div>
+        <div class="prenda-desc">${p.desc}${p.talle ? ` · ${p.talle}` : ''}</div>
+        <span class="badge ${p.vendida ? (p.pagada ? 'vendida' : 'stock') : 'stock'}" style="margin-top:5px;display:inline-block;${p.vendida && p.pagada ? 'background:#edf5f0;color:var(--green);border-color:#c0ddc9;' : ''}">${p.vendida ? (p.pagada ? 'Pagada' : 'Vendida') : 'En stock'}</span>
+      </div>
+      <div class="prenda-right">
+        ${p.tieneComision
+          ? `<div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:${p.vendida ? 'var(--green)' : 'var(--muted)'};">${fmt(p.gananciaProv)}</div>
+             <div style="font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">${p.vendida ? 'ganaste' : 'ganás'}</div>`
+          : `<div style="font-size:10px;color:var(--muted);font-style:italic;">categorizando</div>`
+        }
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPagos(misPagos) {
+  const lista = document.getElementById('pagos-list');
+  if (!misPagos?.length) {
+    lista.innerHTML = '<div class="empty-state">Aún no se registraron transferencias para vos</div>';
+    return;
+  }
+  lista.innerHTML = misPagos.map(p => {
+    const importe = parseFloat(p['Importe']||0);
+    const medio = p['Medio'] || 'Liquidación';
+    const comprobante = p['Comprobante'] || '';
+    if (!importe) return '';
+    return `
+    <div class="pago-item">
+      <div>
+        <div class="pago-fecha">${formatFecha(p['Fecha'])}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px;">${medio}${comprobante ? ' · ' + comprobante : ''}</div>
+      </div>
+      <div class="pago-importe">${fmt(importe)}</div>
+    </div>`;
+  }).filter(Boolean).join('') || '<div class="empty-state">No hay cobros registrados todavía</div>';
+}
+
+// ---- ADMIN ----
+function setAdminTab(tab, btn) {
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['registrar','buscar','pagos','ingresos','caja'].forEach(t => {
+    const el = document.getElementById('admin-tab-'+t);
+    if(el) el.style.display = t===tab ? 'block' : 'none';
+  });
+  if (tab === 'registrar') cargarPagosPendientes();
+  if (tab === 'pagos' && !cachedTodosPagos.length) cargarTodosPagos();
+  if (tab === 'ingresos') { poblarSelectorMeses(); cargarIngresos(); }
+  if (tab === 'caja') { cargarCaja(); cargarEstadoSinc(); }
+}
+
+function setAdminFecha() {
+  const d = new Date();
+  document.getElementById('pago-fecha').value =
+    `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+let cachedProveedoras = [];
+let cachedTodosPagos = [];
+
+function parseFechaFlexible(str) {
+  if (!str) return null;
+  str = String(str).trim();
+  // Formato ISO (cuando el sheet guarda la celda como fecha real): 2026-06-29T03:00:00.000Z
+  const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) {
+    return new Date(parseInt(iso[1]), parseInt(iso[2])-1, parseInt(iso[3]));
+  }
+  // Formatos: DD-MM-YYYY, DD/MM/YYYY, D/M, D-M
+  const m = str.match(/^(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/);
+  if (!m) return null;
+  const day = parseInt(m[1]), month = parseInt(m[2])-1;
+  let year = m[3] ? parseInt(m[3]) : new Date().getFullYear();
+  if (year < 100) year += 2000;
+  return new Date(year, month, day);
+}
+
+async function migrarPagosViejos() {
+  const btn = document.getElementById('btn-migrar');
+  const statusEl = document.getElementById('migrar-status');
+  btn.disabled = true; btn.textContent = 'Migrando...';
+  statusEl.textContent = '';
+  try {
+    const res = await api('migrarPagos', {});
+    if (res && res.success) {
+      statusEl.textContent = `✓ ${res.migrados} pagos migrados correctamente`;
+      cargarTodosPagos();
+    } else {
+      statusEl.textContent = '✗ ' + (res.error || 'Error al migrar');
+      statusEl.style.color = 'var(--red)';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ Error de conexión';
+    statusEl.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Migrar pagos antiguos de la hoja Pagos';
+  }
+}
+
+async function cargarPagosPendientes() {
+  const lista = document.getElementById('pendientes-list');
+  lista.innerHTML = '<div class="loader"><div class="spinner"></div><p>Calculando saldos...</p></div>';
+  try {
+    const [provR, ingR, venR, pagR] = await Promise.all([
+      api('getSheet', { sheet: 'BD_Prov' }),
+      api('getSheet', { sheet: 'Ingresos' }),
+      api('getSheet', { sheet: 'Ventas' }),
+      api('getSheet', { sheet: 'Liquidaciones' })
+    ]);
+    const provRows = provR.rows || [];
+    const ingresos = ingR.rows || [];
+    const ventas = venR.rows || [];
+    const pagos = pagR.rows || [];
+
+    const vendidosCod = new Set(ventas.map(r => String(r['Código']||r['Codigo']||'').trim().toLowerCase()));
+
+    const resultados = provRows.map(provRow => {
+      const num = parseInt(provRow[Object.keys(provRow)[0]]);
+      const nombre = provRow['Proveedor'] || provRow[Object.keys(provRow)[1]] || '';
+      if (!num) return null;
+
+      const misIngresos = ingresos.filter(r => {
+        const cod = String(r['Código Unico'] || r['Codigo Unico'] || r['Código Único'] || '');
+        const m = cod.match(/^(\d+)-/);
+        return m && parseInt(m[1]) === num;
+      });
+      const vendidas = misIngresos.filter(r => {
+        const cod = String(r['Código Unico'] || r['Codigo Unico'] || r['Código Único'] || '').trim();
+        return vendidosCod.has(cod.toLowerCase());
+      });
+      const totalGanancia = vendidas.reduce((s,r) => {
+        const comision = r['Comisión Ainhoa'] || r['Comision Ainhoa'] || 0;
+        return s + (comision ? (parseFloat(r['Ganancia proveedor'])||0) : 0);
+      }, 0);
+
+      const misPagos = pagos.filter(p => parseInt(p['Nro Prov']) === num);
+      const totalCobrado = misPagos.reduce((s,p) => s + (parseFloat(p['Importe'])||0), 0);
+      const pendiente = totalGanancia - totalCobrado;
+
+      return { num, nombre, totalGanancia, totalCobrado, pendiente, vendidasCount: vendidas.length };
+    }).filter(r => r && r.pendiente > 0);
+
+    resultados.sort((a,b) => b.pendiente - a.pendiente);
+
+    if (!resultados.length) {
+      lista.innerHTML = '<div class="empty-state">No hay saldos pendientes</div>';
+      return;
+    }
+
+    const totalGeneral = resultados.reduce((s,r) => s + r.pendiente, 0);
+
+    lista.innerHTML = `
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">${resultados.length} proveedoras con saldo · Total adeudado: <strong style="color:var(--brown);">${fmt(totalGeneral)}</strong></div>
+    ` + resultados.map(r => `
+      <div class="prenda-item" style="margin-bottom:8px;cursor:pointer;" onclick="elegirParaPagar(${r.num})">
+        <div>
+          <div class="prenda-cod">#${r.num}</div>
+          <div class="prenda-desc">${r.nombre}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;">${r.vendidasCount} prendas vendidas · Cobrado: ${fmt(r.totalCobrado)}</div>
+        </div>
+        <div class="prenda-right">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--brown);">${fmt(r.pendiente)}</div>
+          <div style="font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">pendiente</div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    lista.innerHTML = '<div class="empty-state">Error al calcular pagos pendientes</div>';
+  }
+}
+
+function elegirParaPagar(num) {
+  document.getElementById('pago-nro').value = num;
+  buscarNombreAdmin();
+  document.getElementById('form-registrar-pago').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function cargarTodosPagos() {
+  const lista = document.getElementById('todos-pagos-list');
+  lista.innerHTML = '<div class="loader"><div class="spinner"></div><p>Cargando pagos...</p></div>';
+  try {
+    const [pagR, provR] = await Promise.all([
+      api('getSheet', { sheet: 'Liquidaciones' }),
+      api('getSheet', { sheet: 'BD_Prov' })
+    ]);
+    const provRows = provR.rows || [];
+    cachedTodosPagos = (pagR.rows || []).map(p => {
+      const nro = parseInt(p['Nro Prov']);
+      const importe = parseFloat(p['Importe']||0);
+      const prov = provRows.find(r => parseInt(r[Object.keys(r)[0]]) === nro);
+      const nombre = prov ? (prov['Proveedor']||prov[Object.keys(prov)[1]]||'') : (p['Proveedor']||'');
+      return { fecha: p['Fecha'], nro, nombre, importe, tipo: p['Medio'] || 'Liquidación' };
+    }).filter(p => p.importe > 0);
+    renderTodosPagos();
+  } catch(e) {
+    lista.innerHTML = '<div class="empty-state">Error al cargar pagos</div>';
+  }
+}
+
+function renderTodosPagos() {
+  const lista = document.getElementById('todos-pagos-list');
+  const resumenEl = document.getElementById('pagos-resumen');
+  const filtroNro = document.getElementById('filtro-pagos-nro').value;
+  const periodo = document.getElementById('filtro-pagos-periodo').value;
+
+  let filtered = cachedTodosPagos;
+  if (filtroNro) filtered = filtered.filter(p => p.nro === parseInt(filtroNro));
+
+  if (periodo !== 'todos') {
+    const now = new Date();
+    const limite = new Date();
+    if (periodo === 'semana') limite.setDate(now.getDate() - 7);
+    if (periodo === 'mes') limite.setMonth(now.getMonth() - 1);
+    filtered = filtered.filter(p => {
+      const f = parseFechaFlexible(p.fecha);
+      return f && f >= limite;
+    });
+  }
+
+  // Ordenar más reciente primero
+  filtered = filtered.slice().sort((a,b) => {
+    const fa = parseFechaFlexible(a.fecha) || new Date(0);
+    const fb = parseFechaFlexible(b.fecha) || new Date(0);
+    return fb - fa;
+  });
+
+  const total = filtered.reduce((s,p) => s + p.importe, 0);
+  resumenEl.textContent = filtered.length + ' pagos · Total: ' + fmt(total);
+
+  if (!filtered.length) {
+    lista.innerHTML = '<div class="empty-state">No hay pagos para este filtro</div>';
+    return;
+  }
+
+  lista.innerHTML = filtered.map(p => `
+    <div class="pago-item">
+      <div>
+        <div class="pago-fecha">${formatFecha(p.fecha)}</div>
+        <div style="font-size:11px;color:var(--dark);margin-top:2px;">#${p.nro||'—'} ${p.nombre}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px;">${p.tipo}</div>
+      </div>
+      <div class="pago-importe">${fmt(p.importe)}</div>
+    </div>
+  `).join('');
+}
+
+async function loadProveedoras() {
+  try {
+    const data = await api('getSheet', { sheet: 'BD_Prov' });
+    cachedProveedoras = data.rows || [];
+  } catch(e) {}
+}
+
+function getNombre(num) {
+  const n = parseInt(num);
+  const p = cachedProveedoras.find(r => parseInt(r['a']||r[Object.keys(r)[0]]) === n);
+  return p ? (p['Proveedor']||p[Object.keys(p)[1]]||'') : '';
+}
+
+let prendasPendientesCache = [];
+let buscarNombreTimer = null;
+let ultimoNumCargado = null;
+
+async function buscarNombreAdmin() {
+  const num = document.getElementById('pago-nro').value;
+  document.getElementById('pago-nombre').value = getNombre(num) || '';
+  if (!num || num.length < 1) {
+    document.getElementById('prendas-pendientes-pago').style.display = 'none';
+    prendasPendientesCache = [];
+    ultimoNumCargado = null;
+    return;
+  }
+  // Si ya está cargado el mismo número, no recargar
+  if (num === ultimoNumCargado) return;
+  // Debounce: esperar 800ms
+  clearTimeout(buscarNombreTimer);
+  buscarNombreTimer = setTimeout(() => {
+    ultimoNumCargado = num;
+    cargarPrendasPendientesPago(num);
+  }, 800);
+}
+
+async function cargarPrendasPendientesPago(num) {
+  const cont = document.getElementById('prendas-pendientes-pago');
+  const lista = document.getElementById('prendas-pendientes-list');
+  cont.style.display = 'block';
+  lista.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:8px;">Cargando...</div>';
+  try {
+    const res = await api('getPrendasPendientesPago', { num });
+    prendasPendientesCache = (res && res.prendas) || [];
+    renderPrendasPendientesPago();
+  } catch(e) {
+    lista.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:8px;">Error al cargar prendas</div>';
+  }
+}
+
+function renderPrendasPendientesPago() {
+  const lista = document.getElementById('prendas-pendientes-list');
+  if (!prendasPendientesCache.length) {
+    lista.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:8px;">No hay prendas vendidas pendientes de pago para esta proveedora.</div>';
+    actualizarTotalSeleccionado();
+    return;
+  }
+  lista.innerHTML = prendasPendientesCache.map((p, i) => `
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-bottom:1px solid var(--border);cursor:pointer;font-size:12px;">
+      <span style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" class="chk-prenda" data-idx="${i}" checked onchange="actualizarTotalSeleccionado()" style="width:16px;height:16px;">
+        <span><span style="color:var(--gold);font-weight:500;">${p.codigo}</span> ${p.producto}</span>
+      </span>
+      <span style="color:${p.tieneComision?'var(--green)':'var(--muted)'};font-family:'Cormorant Garamond',serif;font-size:14px;">${p.tieneComision ? fmt(p.ganancia) : 'sin comisión'}</span>
+    </label>
+  `).join('');
+  actualizarTotalSeleccionado();
+}
+
+function actualizarTotalSeleccionado() {
+  const checks = document.querySelectorAll('.chk-prenda:checked');
+  let total = 0;
+  checks.forEach(c => {
+    const idx = parseInt(c.dataset.idx);
+    const p = prendasPendientesCache[idx];
+    if (p && p.tieneComision) total += p.ganancia;
+  });
+  document.getElementById('total-seleccionado').textContent = fmt(total);
+  document.getElementById('pago-importe').value = total || '';
+}
+
+function toggleTodasPrendas() {
+  const checks = document.querySelectorAll('.chk-prenda');
+  const algunaSinMarcar = Array.from(checks).some(c => !c.checked);
+  checks.forEach(c => c.checked = algunaSinMarcar);
+  actualizarTotalSeleccionado();
+}
+
+function getCodigosSeleccionados() {
+  const checks = document.querySelectorAll('.chk-prenda:checked');
+  return Array.from(checks).map(c => prendasPendientesCache[parseInt(c.dataset.idx)].codigo);
+}
+
+async function registrarPago() {
+  const nro = document.getElementById('pago-nro').value;
+  const nombre = document.getElementById('pago-nombre').value;
+  const importe = document.getElementById('pago-importe').value;
+  const fecha = document.getElementById('pago-fecha').value;
+  const codigo = document.getElementById('pago-codigo').value;
+  const medio = document.getElementById('pago-medio').value;
+  const successEl = document.getElementById('pago-success');
+  const errorEl = document.getElementById('pago-error');
+  successEl.textContent = ''; errorEl.textContent = '';
+  successEl.style.background = '';
+
+  if (!nro || !importe || !fecha) { errorEl.textContent = 'Completá número, importe y fecha.'; return; }
+
+  const btn = document.querySelector('#admin-tab-registrar button.primary');
+  btn.disabled = true; btn.textContent = 'REGISTRANDO...';
+
+  try {
+    const codigosPagados = getCodigosSeleccionados().join(',');
+    console.log('Codigos a pagar:', codigosPagados);
+    console.log('Cache length:', prendasPendientesCache.length);
+    const res = await api('registrarPago', { fecha: fecha.replace(/\//g,'-'), nroProv: nro, proveedor: nombre, codigo: medio + (codigo ? ' · ' + codigo : ''), importe: parseFloat(importe), codigosPagados });
+    if (res && res.success) {
+      successEl.textContent = '✓ Pago de ' + fmt(parseFloat(importe)) + ' registrado correctamente para ' + (nombre||nro);
+      successEl.style.background = '#edf5f0';
+      successEl.style.padding = '10px';
+      successEl.style.borderRadius = '3px';
+      document.getElementById('pago-nro').value = '';
+      document.getElementById('pago-nombre').value = '';
+      document.getElementById('pago-importe').value = '';
+      document.getElementById('pago-codigo').value = '';
+      document.getElementById('prendas-pendientes-pago').style.display = 'none';
+      prendasPendientesCache = [];
+      ultimoNumCargado = null;
+      setAdminFecha();
+    } else {
+      errorEl.textContent = '✗ El servidor respondió pero algo salió mal. Revisá el Sheet antes de reintentar para evitar duplicados.';
+    }
+  } catch(e) {
+    errorEl.textContent = '⚠️ No se pudo confirmar la respuesta, pero el pago puede haberse guardado igual. Revisá el Sheet antes de volver a tocar el botón.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'REGISTRAR PAGO';
+  }
+}
+async function buscarNombreBusc() {
+  const num = document.getElementById('busc-nro').value;
+  document.getElementById('busc-nombre').value = getNombre(num) || '';
+}
+
+async function buscarAdmin() {
+  const num = parseInt(document.getElementById('busc-nro').value);
+  const resultEl = document.getElementById('buscar-result');
+  resultEl.innerHTML = '<div class="loader"><div class="spinner"></div><p>Buscando...</p></div>';
+
+  try {
+    const [provR, ingR, venR, pagR] = await Promise.all([
+      api('getSheet', { sheet: 'BD_Prov' }),
+      api('getSheet', { sheet: 'Ingresos' }),
+      api('getSheet', { sheet: 'Ventas' }),
+      api('getSheet', { sheet: 'Liquidaciones' })
+    ]);
+    const provRows = provR.rows || [];
+    const ingresos = ingR.rows || [];
+    const ventas = venR.rows || [];
+    const pagos = pagR.rows || [];
+
+    const provRow = provRows.find(r => parseInt(r[Object.keys(r)[0]]) === num);
+    if (!provRow) { resultEl.innerHTML = '<div class="empty-state">Proveedora no encontrada</div>'; return; }
+    const nombre = provRow['Proveedor'] || provRow[Object.keys(provRow)[1]] || '';
+
+    const misIngresos = ingresos.filter(r => {
+      const cod = String(r['Código Unico'] || r['Codigo Unico'] || r['Código Único'] || '');
+      const m = cod.match(/^(\d+)-/);
+      return m && parseInt(m[1]) === num;
+    });
+    const vendidosCod = new Set(ventas.map(r => String(r['Código'] || r['Codigo'] || '').trim().toLowerCase()));
+    const vendidas = misIngresos.filter(r => {
+      const cod = String(r['Código Unico'] || r['Codigo Unico'] || r['Código Único'] || '').trim();
+      return vendidosCod.has(cod.toLowerCase());
+    });
+    const totalGanancia = vendidas.reduce((s,r) => {
+      const comision = r['Comisión Ainhoa'] || r['Comision Ainhoa'] || 0;
+      return s + (comision ? (parseFloat(r['Ganancia proveedor'])||0) : 0);
+    }, 0);
+
+    const misPagos = pagos.filter(r => parseInt(r['Nro Prov']) === num);
+    const totalCobrado = misPagos.reduce((s,r) => s + (parseFloat(r['Importe'])||0), 0);
+    const pendiente = totalGanancia - totalCobrado;
+
+    const historialHtml = misPagos.length ? misPagos.map(p => {
+      const importe = parseFloat(p['Importe']||0);
+      if (!importe) return '';
+      const medio = p['Medio'] || 'Liquidación';
+      return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>${formatFecha(p['Fecha'])} · ${medio}</span>
+        <span style="color:var(--green);font-family:'Cormorant Garamond',serif;font-size:15px;">${fmt(importe)}</span>
+      </div>`;
+    }).filter(Boolean).join('') : '<div style="font-size:12px;color:var(--muted);padding:8px 0;">Sin cobros registrados</div>';
+
+    resultEl.innerHTML = `
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-label">Proveedora #${num}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--dark);margin-bottom:16px;">${nombre}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+          <div><div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Total vendido</div><div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--dark);">${fmt(totalGanancia)}</div></div>
+          <div><div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Ya cobrado</div><div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--green);">${fmt(totalCobrado)}</div></div>
+          <div><div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Pendiente</div><div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--brown);">${fmt(pendiente)}</div></div>
+        </div>
+        <div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;border-top:1px solid var(--border);padding-top:14px;">Historial de cobros</div>
+        ${historialHtml}
+      </div>`;
+  } catch(e) {
+    resultEl.innerHTML = '<div class="empty-state">Error al cargar datos</div>';
+  }
+}
+
+async function guardarContra() {
+  const nro = document.getElementById('busc-nro').value;
+  const pass = document.getElementById('contra-pass').value.trim();
+  const s = document.getElementById('contra-success');
+  const errEl = document.getElementById('contra-error');
+  s.textContent = ''; errEl.textContent = '';
+  s.style.background = '';
+
+  if (!nro || !pass) { errEl.textContent = 'Completá número y contraseña.'; return; }
+
+  const btn = document.getElementById('btn-guardar-contra');
+  if (btn) { btn.disabled = true; btn.textContent = 'GUARDANDO...'; }
+
+  try {
+    const res = await api('setContra', { nro, pass });
+    if (res && res.success) {
+      s.textContent = '✓ Contraseña guardada correctamente para proveedora #' + nro;
+      s.style.background = '#edf5f0';
+      s.style.padding = '10px';
+      s.style.borderRadius = '3px';
+      document.getElementById('contra-pass').value = '';
+    } else {
+      errEl.textContent = '✗ Error: ' + ((res && res.error)||'algo salió mal.');
+    }
+  } catch(e2) {
+    errEl.textContent = '✗ Error de conexión. Revisá tu internet e intentá de nuevo.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'GUARDAR CONTRASEÑA';
+  }
+}
+async function cargarIngresos() {
+  const resumen = document.getElementById('ing-resumen');
+  const lista = document.getElementById('ing-lista');
+  resumen.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+  lista.innerHTML = '';
+
+  try {
+    const res = await api('getSheet', { sheet: 'Ventas' });
+    const ventas = res.rows || [];
+
+    const desde = document.getElementById('ing-desde').value;
+    const hasta = document.getElementById('ing-hasta').value;
+
+    let filtered = ventas.filter(v => {
+      const imp = parseFloat(v['Importe'] || v['importe'] || 0);
+      return imp > 0;
+    });
+
+    if (desde || hasta) {
+      filtered = filtered.filter(v => {
+        const f = parseFechaFlexible(v['Fecha'] || v['fecha']);
+        if (!f) return false;
+        if (desde) {
+          const fd = parseFechaFlexible(desde);
+          if (fd && f < fd) return false;
+        }
+        if (hasta) {
+          const fh = parseFechaFlexible(hasta);
+          if (fh && f > fh) return false;
+        }
+        return true;
+      });
+    }
+
+    const totalBruto = filtered.reduce((s,v) => s + (parseFloat(v['Importe'])||0), 0);
+    const totalGananciaProvs = filtered.reduce((s,v) => s + (parseFloat(v['Ganancia'])||0), 0);
+    const cantVentas = filtered.length;
+    const gananciAinhoa = totalBruto - totalGananciaProvs;
+
+    // Cargar egresos (pagos a proveedoras de Liquidaciones)
+    const resLiq = await api('getSheet', { sheet: 'Liquidaciones' });
+    const liquidaciones = resLiq.rows || [];
+    let filteredLiq = liquidaciones.filter(l => parseFloat(l['Importe']||0) > 0);
+    if (desde || hasta) {
+      filteredLiq = filteredLiq.filter(l => {
+        const f = parseFechaFlexible(l['Fecha'] || l['fecha']);
+        if (!f) return false;
+        if (desde) { const fd = parseFechaFlexible(desde); if (fd && f < fd) return false; }
+        if (hasta) { const fh = parseFechaFlexible(hasta); if (fh && f > fh) return false; }
+        return true;
+      });
+    }
+    const totalEgresos = filteredLiq.reduce((s,l) => s + (parseFloat(l['Importe'])||0), 0);
+    const neto = gananciAinhoa - totalEgresos;
+
+    resumen.innerHTML = `
+      <div class="card" style="border-left:3px solid var(--green);">
+        <div class="card-label">Ingresos brutos</div>
+        <div class="card-value" style="color:var(--green);font-size:22px;">${fmt(totalBruto)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;">${cantVentas} ventas</div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--red);">
+        <div class="card-label">Egresos (pago provs.)</div>
+        <div class="card-value" style="color:var(--red);font-size:22px;">${fmt(totalEgresos)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;">${filteredLiq.length} pagos</div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--brown);background:var(--bg3);">
+        <div class="card-label">Ganancia neta Ainhoa</div>
+        <div class="card-value" style="color:var(--brown);font-size:22px;">${fmt(neto)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;">ingresos − comisión provs. − pagos</div>
+      </div>
+    `;
+
+    // Agrupar por fecha
+    const porFecha = {};
+    filtered.forEach(v => {
+      const f = formatFecha(v['Fecha'] || v['fecha']) || '—';
+      if (!porFecha[f]) porFecha[f] = { total: 0, count: 0 };
+      porFecha[f].total += parseFloat(v['Importe']||0);
+      porFecha[f].count++;
+    });
+
+    const fechasOrdenadas = Object.keys(porFecha).sort((a,b) => {
+      const fa = parseFechaFlexible(a) || new Date(0);
+      const fb = parseFechaFlexible(b) || new Date(0);
+      return fb - fa;
+    });
+
+    if (!fechasOrdenadas.length) {
+      lista.innerHTML = '<div class="empty-state">No hay ventas en este período</div>';
+      return;
+    }
+
+    // Egresos por fecha
+    const porFechaEgr = {};
+    filteredLiq.forEach(l => {
+      const f = formatFecha(l['Fecha'] || l['fecha']) || '—';
+      if (!porFechaEgr[f]) porFechaEgr[f] = { total: 0, count: 0 };
+      porFechaEgr[f].total += parseFloat(l['Importe']||0);
+      porFechaEgr[f].count++;
+    });
+
+    lista.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div class="section-title"><span>Ingresos por día</span></div>
+          ${fechasOrdenadas.length ? fechasOrdenadas.map(f => `
+            <div class="pago-item">
+              <div>
+                <div class="pago-fecha">${f}</div>
+                <div style="font-size:10px;color:var(--muted);">${porFecha[f].count} venta${porFecha[f].count > 1 ? 's' : ''}</div>
+              </div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--green);">${fmt(porFecha[f].total)}</div>
+            </div>
+          `).join('') : '<div class="empty-state">Sin ventas</div>'}
+        </div>
+        <div>
+          <div class="section-title"><span>Egresos por día</span></div>
+          ${Object.keys(porFechaEgr).length ? Object.keys(porFechaEgr).sort((a,b) => {
+            const fa = parseFechaFlexible(a)||new Date(0);
+            const fb = parseFechaFlexible(b)||new Date(0);
+            return fb-fa;
+          }).map(f => `
+            <div class="pago-item">
+              <div>
+                <div class="pago-fecha">${f}</div>
+                <div style="font-size:10px;color:var(--muted);">${porFechaEgr[f].count} pago${porFechaEgr[f].count > 1 ? 's' : ''}</div>
+              </div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--red);">${fmt(porFechaEgr[f].total)}</div>
+            </div>
+          `).join('') : '<div class="empty-state">Sin egresos</div>'}
+        </div>
+      </div>
+    `;
+  } catch(e) {
+    lista.innerHTML = '<div class="empty-state">Error al cargar</div>';
+  }
+}
+
+function poblarSelectorMeses() {
+  const sel = document.getElementById('ing-mes-select');
+  if (!sel || sel.dataset.poblado) return;
+  sel.dataset.poblado = '1';
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const hoy = new Date();
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+    const valor = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    const opt = document.createElement('option');
+    opt.value = valor;
+    opt.textContent = meses[d.getMonth()] + ' ' + d.getFullYear();
+    sel.appendChild(opt);
+  }
+}
+
+function setIngMesElegido(valor) {
+  if (!valor) return;
+  document.querySelectorAll('#admin-tab-ingresos .filtro-btn').forEach(b => b.classList.remove('active'));
+  const partes = valor.split('-');
+  const anio = parseInt(partes[0]), mes = parseInt(partes[1]);
+  const desde = valor + '-01';
+  const ultimoDia = new Date(anio, mes, 0).getDate();
+  const hasta = valor + '-' + String(ultimoDia).padStart(2,'0');
+  document.getElementById('ing-desde').value = desde;
+  document.getElementById('ing-hasta').value = hasta;
+  cargarIngresos();
+}
+
+function setIngPeriodo(periodo, btn) {
+  document.querySelectorAll('#admin-tab-ingresos .filtro-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const hoy = new Date();
+  const d = (date) => date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+  if (periodo === 'semana') {
+    const lunes = new Date(hoy);
+    lunes.setDate(hoy.getDate() - hoy.getDay() + 1);
+    document.getElementById('ing-desde').value = d(lunes);
+    document.getElementById('ing-hasta').value = d(hoy);
+  } else if (periodo === 'mes') {
+    document.getElementById('ing-desde').value = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0') + '-01';
+    document.getElementById('ing-hasta').value = d(hoy);
+  } else {
+    document.getElementById('ing-desde').value = '';
+    document.getElementById('ing-hasta').value = '';
+  }
+  cargarIngresos();
+}
+
+async function cargarEstadoSinc() {
+  const loading = document.getElementById('pendiente-sinc-loading');
+  const contenido = document.getElementById('pendiente-sinc-contenido');
+  const problemasWrap = document.getElementById('pendiente-problemas-wrap');
+  loading.style.display = 'block';
+  contenido.style.display = 'none';
+  problemasWrap.style.display = 'none';
+  try {
+    const res = await api('getEstadoSincCaja', {});
+    if (!res.ok) { loading.textContent = 'No se pudo cargar.'; return; }
+    document.getElementById('pend-v-desde').textContent = res.pendienteVentas.desde;
+    document.getElementById('pend-v-cant').textContent = res.pendienteVentas.cantidad;
+    document.getElementById('pend-v-transf').textContent = Math.round(res.pendienteVentas.totalTransferencia).toLocaleString('es-AR');
+    document.getElementById('pend-v-efect').textContent = Math.round(res.pendienteVentas.totalEfectivo).toLocaleString('es-AR');
+    document.getElementById('pend-p-desde').textContent = res.pendientePagos.desde;
+    document.getElementById('pend-p-cant').textContent = res.pendientePagos.cantidad;
+    document.getElementById('pend-p-total').textContent = Math.round(res.pendientePagos.total).toLocaleString('es-AR');
+    loading.style.display = 'none';
+    contenido.style.display = 'block';
+    if (res.ventasConProblemas && res.ventasConProblemas.length > 0) {
+      document.getElementById('pend-problemas-cant').textContent = res.ventasConProblemas.length;
+      document.getElementById('pend-problemas-lista').innerHTML = res.ventasConProblemas.map(v =>
+        `Fila ${v.fila} — ${v.cliente || '(sin cliente)'} ${v.codigo ? '· ' + v.codigo : ''} → <strong>${v.motivo}</strong>`
+      ).join('<br>');
+      problemasWrap.style.display = 'block';
+    }
+  } catch (err) {
+    loading.textContent = 'Error al cargar.';
+  }
+}
+
+function poblarSelectorMesesCaja() {
+  const sel = document.getElementById('caja-mes-select');
+  if (!sel || sel.dataset.poblado) return;
+  sel.dataset.poblado = '1';
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const mesesCap = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const hoy = new Date();
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+    const opt = document.createElement('option');
+    opt.value = meses[d.getMonth()] + '|' + d.getFullYear();
+    opt.textContent = mesesCap[d.getMonth()] + ' ' + d.getFullYear();
+    sel.appendChild(opt);
+  }
+}
+
+async function cargarCaja() {
+  poblarSelectorMesesCaja();
+  const resumen = document.getElementById('caja-resumen');
+  const lista = document.getElementById('caja-lista');
+  resumen.innerHTML = '<div class="loader"><div class="spinner"></div><span>Cargando caja...</span></div>';
+  lista.innerHTML = '';
+  // Set fecha hoy
+  const hoy = new Date();
+  const fechaHoy = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0') + '-' + String(hoy.getDate()).padStart(2,'0');
+  if (!document.getElementById('caja-fecha').value) document.getElementById('caja-fecha').value = fechaHoy;
+  const mesNombre = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][hoy.getMonth()+1];
+  if (!document.getElementById('caja-periodo').value) document.getElementById('caja-periodo').value = mesNombre;
+
+  const filtroVal = document.getElementById('caja-mes-select').value;
+  const params = { n: 30 };
+  if (filtroVal) {
+    const [mesF, anioF] = filtroVal.split('|');
+    params.mes = mesF;
+    params.anio = anioF;
+    params.n = 1000;
+  }
+
+  try {
+    const res = await api('getCaja', params);
+    if (!res.ok) { resumen.innerHTML = '<div class="empty-state">Error al cargar</div>'; return; }
+    const disp = res.totalIngreso - res.totalEgreso;
+    resumen.innerHTML = `
+      <div class="card" style="border-left:3px solid var(--green);">
+        <div class="card-label">Total ingresos</div>
+        <div class="card-value" style="color:var(--green);font-size:20px;">${fmt(res.totalIngreso)}</div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--red);">
+        <div class="card-label">Total egresos</div>
+        <div class="card-value" style="color:var(--red);font-size:20px;">${fmt(res.totalEgreso)}</div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--brown);background:var(--bg3);">
+        <div class="card-label">Disponibilidad</div>
+        <div class="card-value" style="color:var(--brown);font-size:20px;">${fmt(disp)}</div>
+      </div>
+    `;
+    if (!res.rows || !res.rows.length) {
+      lista.innerHTML = '<div class="empty-state">Sin movimientos</div>';
+      return;
+    }
+    lista.innerHTML = res.rows.map(r => `
+      <div class="pago-item">
+        <div>
+          <div class="pago-fecha">${r.fecha} · ${r.concepto}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px;">${r.formaPago} · ${r.descripcion}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:${r.flujo.toLowerCase().indexOf('ingreso')>-1?'var(--green)':'var(--red)'};">
+            ${r.flujo.toLowerCase().indexOf('egreso')>-1?'-':''}${fmt(r.monto)}
+          </div>
+          <div style="font-size:9px;color:var(--muted);">${r.periodo}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    resumen.innerHTML = '<div class="empty-state">Error de conexión</div>';
+  }
+}
+
+async function registrarCaja() {
+  const btn = document.getElementById('btn-caja');
+  const successEl = document.getElementById('caja-success');
+  const errorEl = document.getElementById('caja-error');
+  successEl.style.display = 'none'; errorEl.textContent = '';
+
+  const fecha = document.getElementById('caja-fecha').value;
+  const concepto = document.getElementById('caja-concepto').value;
+  const flujo = document.getElementById('caja-flujo').value;
+  const formaPago = document.getElementById('caja-forma').value;
+  const monto = document.getElementById('caja-monto').value;
+  const periodo = document.getElementById('caja-periodo').value;
+  const descripcion = document.getElementById('caja-descripcion').value;
+
+  if (!concepto || !monto || !fecha) { errorEl.textContent = 'Completá concepto, monto y fecha.'; return; }
+
+  btn.disabled = true; btn.textContent = 'REGISTRANDO...';
+  try {
+    const fechaFmt = fecha.includes('/') ? fecha.split('/').reverse().join('-') : fecha;
+    const res = await api('registrarCaja', { fecha: fechaFmt, concepto, flujo, formaPago, descripcion, periodo, monto: parseFloat(monto) });
+    if (res && res.success) {
+      successEl.textContent = '✓ Movimiento registrado correctamente en Caja Ainhoa';
+      successEl.style.display = 'block';
+      document.getElementById('caja-monto').value = '';
+      document.getElementById('caja-descripcion').value = '';
+      setTimeout(() => { successEl.style.display = 'none'; cargarCaja(); cargarEstadoSinc(); }, 2000);
+    } else {
+      errorEl.textContent = '⚠️ Error al registrar. Revisá el Sheet.';
+    }
+  } catch(e) {
+    errorEl.textContent = '⚠️ Sin confirmación — puede haberse guardado. Revisá el Sheet.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Registrar movimiento';
+  }
+}
+
+async function marcarYaCargado() {
+  const hasta = document.getElementById('marcar-hasta').value;
+  const successEl = document.getElementById('marcar-success');
+  const btn = document.getElementById('btn-marcar-hasta');
+  successEl.style.display = 'none';
+  if (!hasta) { alert('Elegí una fecha primero.'); return; }
+  if (!confirm(`¿Confirmás que en Caja ya está todo cargado a mano hasta el ${hasta}? Esto NO va a agregar nada a Caja, solo evita que se dupliquen ventas/pagos de antes de esa fecha.`)) return;
+  btn.disabled = true; btn.textContent = 'Marcando...';
+  try {
+    const res = await api('marcarSincronizadoHasta', { hasta });
+    if (res && res.success) {
+      successEl.textContent = `✓ Listo, la sincronización va a arrancar a contar desde el ${hasta}.`;
+      successEl.style.display = 'block';
+      cargarEstadoSinc();
+    }
+  } catch(e) {
+    alert('Error al marcar.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Marcar como ya cargado';
+  }
+}
+
+async function sincronizarVentas() {
+  const btn = document.getElementById('btn-sinc');
+  const successEl = document.getElementById('sinc-success');
+  successEl.style.display = 'none';
+  const desde = document.getElementById('sinc-desde').value;
+  const hasta = document.getElementById('sinc-hasta').value;
+  const desc = document.getElementById('sinc-desc').value;
+  const periodo = document.getElementById('sinc-periodo').value;
+
+  btn.disabled = true; btn.textContent = 'SINCRONIZANDO...';
+  try {
+    const res = await api('sincronizarVentasCaja', { desde, hasta, descripcion: desc, formaPago: 'Mixto', periodo });
+    if (res && res.success) {
+      successEl.textContent = `✓ Sincronizado: Transferencia ${fmt(res.totalTransf)} + Efectivo ${fmt(res.totalEfect)}`;
+      successEl.style.display = 'block';
+      setTimeout(() => { successEl.style.display = 'none'; cargarCaja(); cargarEstadoSinc(); }, 2500);
+    }
+  } catch(e) {
+    alert('Error de sincronización');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sincronizar ventas';
+  }
+}
+
+async function sincronizarPagos() {
+  const btn = document.getElementById('btn-sincpago');
+  const successEl = document.getElementById('sincpago-success');
+  successEl.style.display = 'none';
+  const desde = document.getElementById('sincpago-desde').value;
+  const hasta = document.getElementById('sincpago-hasta').value;
+  const desc = document.getElementById('sincpago-desc').value;
+  const periodo = document.getElementById('sincpago-periodo').value;
+
+  btn.disabled = true; btn.textContent = 'SINCRONIZANDO...';
+  try {
+    const res = await api('sincronizarPagosCaja', { desde, hasta, descripcion: desc, periodo });
+    if (res && res.success) {
+      successEl.textContent = res.totalPagos > 0 ? `✓ Sincronizado: ${fmt(res.totalPagos)} en pagos` : 'No había pagos en ese rango.';
+      successEl.style.display = 'block';
+      setTimeout(() => { successEl.style.display = 'none'; cargarCaja(); cargarEstadoSinc(); }, 2500);
+    } else {
+      alert('Error de sincronización: ' + (res && res.error ? res.error : 'motivo desconocido'));
+    }
+  } catch(e) {
+    alert('Error de sincronización (red/conexión): ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sincronizar pagos';
+  }
+}
+
+// INIT
+showMode();
+</script>
+</body>
+</html>
