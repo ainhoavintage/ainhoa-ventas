@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ainhoa · Cargar Venta</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f7;
+  --bg2: #f3f1ed;
+  --bg3: #ece9e3;
+  --border: #ddd9d0;
+  --dark: #1a1712;
+  --brown: #6b5c3e;
+  --gold: #9a7e42;
+  --text: #3a3228;
+  --muted: #9e8f7a;
+  --green: #4a7c59;
+  --green-bg: #edf5f0;
+  --green-border: #c0ddc9;
+  --red: #b85c5c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+
+header {
+  background: var(--dark);
+  padding: 20px 24px 16px;
+  text-align: center;
+}
+.brand { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: #f0ead8; letter-spacing: 0.18em; text-transform: uppercase; }
+.brand-sub { font-size: 10px; letter-spacing: 0.28em; color: #e8d08a; text-transform: uppercase; margin-top: 3px; }
+
+main { max-width: 600px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* LOGIN */
+#login-screen { display: flex; flex-direction: column; align-items: center; padding-top: 40px; }
+.login-box {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 36px 32px; width: 100%; max-width: 380px;
+  display: flex; flex-direction: column; gap: 18px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+.login-box h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--dark); text-align: center; }
+
+/* FORM */
+#app { display: none; }
+.section-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 24px; margin-bottom: 14px;
+}
+.section-card h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300;
+  color: var(--dark); margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.input-group:last-child { margin-bottom: 0; }
+.input-group label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+
+input[type="text"], input[type="number"], input[type="password"], select, textarea {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--dark); font-family: 'DM Sans', sans-serif; font-size: 15px;
+  padding: 11px 13px; width: 100%; outline: none;
+  transition: border-color 0.2s; -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--brown); }
+input::placeholder, textarea::placeholder { color: var(--muted); }
+input[readonly] { color: var(--brown); background: var(--bg3); }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+/* Prenda preview card */
+.prenda-preview {
+  background: var(--green-bg); border: 1px solid var(--green-border);
+  border-radius: 10px; padding: 16px; margin-bottom: 14px; display: none;
+}
+.prenda-preview .cod { font-size: 10px; letter-spacing: 0.14em; color: var(--gold); font-weight: 500; text-transform: uppercase; margin-bottom: 4px; }
+.prenda-preview .desc { font-size: 14px; color: var(--dark); font-weight: 500; margin-bottom: 8px; }
+.prenda-preview .meta { display: flex; gap: 16px; flex-wrap: wrap; }
+.prenda-preview .meta span { font-size: 12px; color: var(--muted); }
+.prenda-preview .meta strong { color: var(--dark); }
+
+/* Botones */
+button.primary {
+  background: var(--dark); border: none; border-radius: 10px;
+  color: #f0ead8; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.16em;
+  padding: 14px; text-transform: uppercase; width: 100%;
+  transition: background 0.2s;
+}
+button.primary:hover { background: #2e2a22; }
+button.primary:disabled { background: var(--muted); cursor: not-allowed; }
+
+button.secondary {
+  background: none; border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); cursor: pointer; font-family: 'DM Sans', sans-serif;
+  font-size: 11px; letter-spacing: 0.14em; padding: 10px 18px;
+  text-transform: uppercase; transition: border-color 0.2s;
+}
+button.secondary:hover { border-color: var(--brown); }
+
+.error-msg { font-size: 12px; color: var(--red); text-align: center; min-height: 16px; }
+.success-msg { font-size: 13px; color: var(--green); padding: 12px; background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 10px; text-align: center; }
+
+/* Header app */
+.app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.app-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; color: var(--dark); }
+
+/* Recientes */
+.reciente-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+}
+.reciente-item:last-child { border-bottom: none; }
+.reciente-cod { font-size: 10px; color: var(--gold); font-weight: 500; letter-spacing: 0.1em; margin-bottom: 2px; }
+.reciente-desc { color: var(--dark); }
+.reciente-right { text-align: right; }
+.reciente-importe { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--dark); }
+.reciente-fecha { font-size: 10px; color: var(--muted); }
+
+.loader { display: flex; align-items: center; gap: 10px; padding: 20px 0; color: var(--muted); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">ainhoa</div>
+  <div class="brand-sub">Cargar Venta</div>
+</header>
+
+<main>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h2>Acceso</h2>
+    <div class="input-group">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <button class="primary" onclick="doLogin()" id="btn-login">Ingresar</button>
+    <div class="error-msg" id="login-error"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="app-header">
+    <h2>Nueva venta</h2>
+    <button class="secondary" onclick="doLogout()">Salir</button>
+  </div>
+
+  <!-- PASO 1: CÓDIGO -->
+  <div class="section-card">
+    <h3>Código de prenda</h3>
+    <div class="input-group">
+      <label>Código</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="codigo" placeholder="Ej: 103-3" style="flex:1;" onkeydown="if(event.key==='Enter') buscarPrenda()">
+        <button class="secondary" onclick="buscarPrenda()" style="white-space:nowrap;padding:11px 16px;">Buscar</button>
+      </div>
+    </div>
+    <div id="buscar-loader" style="display:none;" class="loader"><div class="spinner"></div><span>Buscando...</span></div>
+    <div id="prenda-preview" class="prenda-preview">
+      <div class="cod" id="prev-cod"></div>
+      <div class="desc" id="prev-desc"></div>
+      <div class="meta">
+        <span>Talle: <strong id="prev-talle">—</strong></span>
+        <span>Precio: <strong id="prev-precio">—</strong></span>
+        <span>Proveedora: <strong id="prev-prov">—</strong></span>
+      </div>
+    </div>
+    <div class="error-msg" id="buscar-error"></div>
+  </div>
+
+  <!-- PASO 2: DATOS DE VENTA -->
+  <div class="section-card" id="form-venta" style="display:none;">
+    <h3>Datos de la venta</h3>
+
+    <div class="form-row">
+      <div class="input-group">
+        <label>Fecha</label>
+        <input type="text" id="venta-fecha" readonly>
+      </div>
+      <div class="input-group">
+        <label>Cliente (@ o nombre)</label>
+        <input type="text" id="venta-cliente" placeholder="@instagram">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="input-group">
+        <label>Importe ($)</label>
+        <input type="number" id="venta-importe" placeholder="Precio de venta">
+      </div>
+      <div class="input-group">
+        <label>Medio de pago</label>
+        <select id="venta-medio">
+          <option value="">Seleccionar</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="input-group">
+        <label>Condición</label>
+        <select id="venta-condicion">
+          <option value="Vendido">Vendido</option>
+          <option value="Reservado">Reservado</option>
+          <option value="No vendido">No vendido</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Envío / Retiro</label>
+        <select id="venta-envio">
+          <option value="">—</option>
+          <option value="Envío">Envío</option>
+          <option value="Retiro">Retiro</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Notas (opcional)</label>
+      <input type="text" id="venta-notas" placeholder="Ej: -10off x anterior compra, falta pagar 1000...">
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="secondary" onclick="resetForm()" style="flex:1;">Cancelar</button>
+      <button class="primary" onclick="guardarVenta()" id="btn-guardar" style="flex:2;">Guardar venta</button>
+    </div>
+    <div style="margin-top:12px;" id="guardar-feedback"></div>
+  </div>
+
+  <!-- VENTAS RECIENTES -->
+  <div class="section-card">
+    <h3>Últimas ventas cargadas</h3>
+    <div id="recientes-loader" class="loader"><div class="spinner"></div><span>Cargando...</span></div>
+    <div id="recientes-list"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZbEeODB-LF71H32WLSJafEKpl4sQNzMEiNQ2nvxK6LjNc1pmX0NMEbKSi5s7EXk9d/exec';
+const VENTAS_PASSWORD = 'ainhoa2026'; // ← cambiá esto
+
+let prendaActual = null;
+
+async function api(action, params = {}) {
+  const url = new URL(APPS_SCRIPT_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return '$' + Math.round(n).toLocaleString('es-AR');
+}
+
+function fechaHoy() {
+  const d = new Date();
+  return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+}
+
+// LOGIN
+async function doLogin() {
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+  errEl.textContent = '';
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  try {
+    const res = await api('checkAdminPass', { pass });
+    if (res && res.ok) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('venta-fecha').value = fechaHoy();
+      cargarRecientes();
+    } else {
+      errEl.textContent = 'Contraseña incorrecta.';
+    }
+  } catch(e) {
+    errEl.textContent = 'Error de conexión.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Ingresar';
+  }
+}
+
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-pass').value = '';
+  resetForm();
+}
+
+// BUSCAR PRENDA
+async function buscarPrenda() {
+  const codigo = document.getElementById('codigo').value.trim();
+  const errEl = document.getElementById('buscar-error');
+  const preview = document.getElementById('prenda-preview');
+  const loader = document.getElementById('buscar-loader');
+  errEl.textContent = '';
+  preview.style.display = 'none';
+  document.getElementById('form-venta').style.display = 'none';
+
+  if (!codigo) { errEl.textContent = 'Ingresá un código.'; return; }
+
+  loader.style.display = 'flex';
+  try {
+    const res = await api('getPrenda', { codigo });
+    if (!res || !res.ok) {
+      errEl.textContent = res.error || 'Prenda no encontrada.';
+      loader.style.display = 'none';
+      return;
+    }
+    prendaActual = res.prenda;
+    document.getElementById('prev-cod').textContent = prendaActual.codigo;
+    document.getElementById('prev-desc').textContent = prendaActual.producto;
+    document.getElementById('prev-talle').textContent = prendaActual.talle || '—';
+    document.getElementById('prev-precio').textContent = fmt(prendaActual.precioVenta);
+    document.getElementById('prev-prov').textContent = prendaActual.proveedor || '—';
+    preview.style.display = 'block';
+
+    // Pre-completar importe
+    document.getElementById('venta-importe').value = prendaActual.precioVenta || '';
+    document.getElementById('form-venta').style.display = 'block';
+    document.getElementById('venta-cliente').focus();
+  } catch(e) {
+    errEl.textContent = 'Error de conexión.';
+  } finally {
+    loader.style.display = 'none';
+  }
+}
+
+// GUARDAR VENTA
+async function guardarVenta() {
+  if (!prendaActual) return;
+  const feedbackEl = document.getElementById('guardar-feedback');
+  const btn = document.getElementById('btn-guardar');
+  feedbackEl.innerHTML = '';
+
+  const cliente = document.getElementById('venta-cliente').value.trim();
+  const importe = document.getElementById('venta-importe').value;
+  const medio = document.getElementById('venta-medio').value;
+  const condicion = document.getElementById('venta-condicion').value;
+  const envio = document.getElementById('venta-envio').value;
+  const notas = document.getElementById('venta-notas').value.trim();
+  const fecha = document.getElementById('venta-fecha').value;
+
+  if (!cliente || !importe || !medio) {
+    feedbackEl.innerHTML = '<div class="error-msg">Completá cliente, importe y medio de pago.</div>';
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'GUARDANDO...';
+
+  try {
+    const res = await api('registrarVenta', {
+      fecha, cliente, codigo: prendaActual.codigo,
+      producto: prendaActual.producto, talle: prendaActual.talle || '',
+      importe: parseFloat(importe), medio, condicion, envio, notas
+    });
+
+    if (res && res.success) {
+      feedbackEl.innerHTML = '<div class="success-msg">✓ Venta cargada correctamente</div>';
+      setTimeout(() => {
+        resetForm();
+        cargarRecientes();
+      }, 1500);
+    } else {
+      feedbackEl.innerHTML = '<div class="error-msg">⚠️ No se pudo confirmar. Revisá el Sheet antes de reintentar.</div>';
+    }
+  } catch(e) {
+    feedbackEl.innerHTML = '<div class="error-msg">⚠️ Sin confirmación — puede haberse guardado igual. Revisá el Sheet.</div>';
+  } finally {
+    btn.disabled = false; btn.textContent = 'GUARDAR VENTA';
+  }
+}
+
+function resetForm() {
+  prendaActual = null;
+  document.getElementById('codigo').value = '';
+  document.getElementById('prenda-preview').style.display = 'none';
+  document.getElementById('form-venta').style.display = 'none';
+  document.getElementById('buscar-error').textContent = '';
+  document.getElementById('guardar-feedback').innerHTML = '';
+  document.getElementById('venta-cliente').value = '';
+  document.getElementById('venta-importe').value = '';
+  document.getElementById('venta-medio').value = '';
+  document.getElementById('venta-condicion').value = 'Vendido';
+  document.getElementById('venta-envio').value = '';
+  document.getElementById('venta-notas').value = '';
+  document.getElementById('venta-fecha').value = fechaHoy();
+}
+
+// VENTAS RECIENTES
+async function cargarRecientes() {
+  const lista = document.getElementById('recientes-list');
+  document.getElementById('recientes-loader').style.display = 'flex';
+  lista.innerHTML = '';
+  try {
+    const res = await api('getUltimasVentas', { n: 10 });
+    document.getElementById('recientes-loader').style.display = 'none';
+    const ventas = res.ventas || [];
+    if (!ventas.length) {
+      lista.innerHTML = '<div class="empty-state">No hay ventas cargadas aún</div>';
+      return;
+    }
+    lista.innerHTML = ventas.map(v => `
+      <div class="reciente-item">
+        <div>
+          <div class="reciente-cod">${v.codigo}</div>
+          <div class="reciente-desc">${v.producto}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">${v.cliente} · ${v.medio}</div>
+        </div>
+        <div class="reciente-right">
+          <div class="reciente-importe">${fmt(v.importe)}</div>
+          <div class="reciente-fecha">${v.fecha}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    document.getElementById('recientes-loader').style.display = 'none';
+    lista.innerHTML = '<div class="empty-state">Error al cargar</div>';
+  }
+}
+
+// Enter en login
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+</body>
+</html>
