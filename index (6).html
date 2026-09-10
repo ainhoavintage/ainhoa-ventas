@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ainhoa · Devoluciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF7F1; --ink:#111111; --caramelo:#B87F45;
+    --green:#4C7A5E; --tan:#A68A64; --gray:#8A8A8A; --borde:#EAE3D5;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  body{margin:0; font-family:Georgia,serif; background:var(--cream); color:var(--ink)}
+  button,input{font-family:Georgia,serif}
+  .display{font-family:'Cormorant Garamond',Georgia,serif}
+
+  header{background:var(--ink); padding:34px 20px 26px; text-align:center}
+  header .marca{color:#fff; font-size:34px; letter-spacing:6px; font-weight:500}
+  header .sub{color:#ffffffb0; font-size:11px; letter-spacing:3px; margin-top:6px; text-transform:uppercase}
+
+  .wrap{max-width:440px; margin:0 auto; padding:22px 18px 60px}
+
+  .card{width:100%; text-align:left; padding:18px; border-radius:16px; border:1px solid var(--borde);
+        background:#fff; cursor:pointer; margin-bottom:10px; display:block}
+  .card:active{background:#F5F0E6}
+  .landing{display:flex; align-items:center; gap:16px}
+  .landing .ic{width:26px; height:26px; display:flex; align-items:center; justify-content:center; flex:0 0 26px}
+  .landing .tx{flex:1}
+  .landing .t{font-size:17px}
+  .landing .s{font-size:11.5px; color:var(--tan); margin-top:2px}
+
+  .tag{display:inline-block; padding:4px 12px; border-radius:999px; font-size:10.5px;
+       letter-spacing:1px; text-transform:uppercase; white-space:nowrap}
+
+  .buscador{width:100%; padding:16px; font-size:17px; border:1px solid #ddd6c8;
+            border-radius:14px; margin-bottom:12px; background:#fff}
+  .buscador:focus{outline:none; border-color:var(--tan)}
+
+  .orden{position:relative; margin-bottom:16px}
+  .orden .btn{width:100%; display:flex; align-items:center; justify-content:space-between;
+              padding:12px 16px; border-radius:14px; border:1px solid var(--borde);
+              background:#fff; color:var(--ink); font-size:13.5px; text-align:left}
+  .orden .btn .et{color:var(--tan)}
+  .orden .menu{position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:20; background:#fff;
+               border:1px solid var(--borde); border-radius:14px; overflow:hidden;
+               box-shadow:0 8px 24px rgba(17,17,17,.10)}
+  .orden .menu button{width:100%; text-align:left; padding:13px 16px; font-size:13.5px;
+                      border:none; border-top:1px solid #F2ECE0; background:#fff; color:var(--ink)}
+  .orden .menu button:first-child{border-top:none}
+  .orden .menu button.on{background:#F5F0E6; color:var(--caramelo)}
+
+  .prenda{background:#fff; border:1px solid var(--borde); border-radius:16px; padding:16px; margin-bottom:10px}
+  .prenda.busy{opacity:.55; pointer-events:none}
+  .fila{display:flex; justify-content:space-between; align-items:center; gap:8px}
+  .cod{color:var(--caramelo); font-weight:600}
+  .prod{font-size:14.5px; margin:6px 0 2px; line-height:1.35}
+  .prov{font-size:12px; color:var(--tan)}
+  .fecha{font-size:11px; color:#bbb; margin-top:2px; margin-bottom:12px}
+  .nota{background:#8A8A8A18; border-radius:10px; padding:8px 10px; font-size:12.5px; color:#555; margin-bottom:10px}
+
+  .estados{display:flex; gap:6px}
+  .eb{flex:1; padding:11px 3px; border-radius:10px; font-size:11.5px; line-height:1.2; background:#fff}
+  .stock-btn{width:100%; margin-top:6px; padding:8px; border-radius:10px; border:1px solid var(--borde);
+             background:transparent; color:#999; font-size:11px}
+
+  .campo{margin-top:10px}
+  .campo .titulo{font-size:12.5px; color:#666; margin-bottom:6px}
+  .campo input{width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; font-size:13px; margin-bottom:6px}
+  .campo .acciones{display:flex; gap:6px}
+  .campo .guardar{flex:2; padding:9px; border-radius:10px; border:none; background:var(--gray); color:#fff; font-size:12.5px}
+  .campo .cancelar{flex:1; padding:9px; border-radius:10px; border:1px solid #ddd; background:#fff; color:#666; font-size:12.5px}
+
+  .acc{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap}
+  .acc button{flex:1; padding:10px; border-radius:10px; font-size:13px; border:1px solid #ddd; background:#fff; color:var(--ink)}
+  .acc button.wa{flex:1 1 100%; border:none; background:var(--green); color:#fff}
+  .acc button.borrar{flex:1 1 100%; border-color:#E4C9C9; color:#A76A6A}
+  .acc button.prim{border:none; background:var(--green); color:#fff}
+
+  .sel{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid #F2ECE0; font-size:13px}
+  .sel .mk{width:20px; height:20px; border-radius:6px; border:1px solid #ddd6c8; flex:0 0 20px;
+           display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff}
+  .sel.on .mk{background:var(--caramelo); border-color:var(--caramelo)}
+  .mapa-mueble{margin-bottom:18px}
+  .mapa-mueble h3{font-size:12.5px; letter-spacing:1.5px; color:var(--tan);
+                  text-transform:uppercase; margin:0 0 8px; font-weight:normal}
+  .lugares{display:grid; grid-template-columns:repeat(2,1fr); gap:8px}
+  .lugar{cursor:pointer; border:1px solid var(--borde); border-radius:14px; padding:12px; background:#fff; min-height:74px}
+  .lugar.libre{background:transparent; border-style:dashed}
+  .lugar .n{font-size:13px; margin-bottom:4px}
+  .lugar .c{font-size:11px; color:var(--tan)}
+  .lugar .p{font-size:11.5px; color:var(--caramelo); margin-top:4px; line-height:1.35}
+  .etiqueta{background:#fff; border:1px dashed var(--caramelo); border-radius:16px; padding:18px; text-align:center; margin-bottom:10px}
+  .etiqueta .l1{font-size:12px; letter-spacing:2px; color:var(--tan); text-transform:uppercase}
+  .etiqueta .l2{font-size:20px; margin:6px 0}
+  .etiqueta .l3{font-size:15px; color:var(--caramelo)}
+  .vacio{color:#999; text-align:center; padding:24px 0}
+  .cargando{text-align:center; color:var(--tan); padding:30px 0}
+  .errorbox{background:#fff; border:1px solid var(--borde); border-radius:16px; padding:18px; text-align:center}
+  .errorbox button{margin-top:12px; padding:10px 20px; border-radius:10px; border:none; background:var(--ink); color:#fff; font-size:13px}
+  .titulo-prov{font-size:16px; font-weight:600; margin-bottom:12px}
+  .conteo{font-size:12.5px; color:var(--tan); margin:0 0 12px; letter-spacing:1px}
+  .volver{margin-top:8px; background:none; border:none; color:#999; font-size:13px; padding:6px 0}
+  .aviso{position:sticky; top:0; z-index:30; color:#fff; text-align:center; padding:10px 16px; font-size:13px}
+  .nav{position:sticky; top:0; z-index:25; background:var(--cream); border-bottom:1px solid var(--borde);
+       display:flex; justify-content:space-between; align-items:center; padding:10px 18px}
+  .nav button{background:none; border:none; color:#777; font-size:14px; padding:6px 2px}
+  .nav .inicio{color:var(--caramelo)}
+
+/* Respuesta al toque: se hunde y se aclara apenas la apretás,
+   sin esperar al servidor. */
+.card, button { -webkit-tap-highlight-color: transparent; transition: transform .06s, opacity .12s; }
+.card:active, button:active { transform: scale(.97); opacity:.55; }
+.card.apretado, button.apretado { opacity:.4; transform: scale(.97); pointer-events:none; }
+button[disabled]{ opacity:.4; pointer-events:none; }
+
+/* Botón grande de escanear */
+.escan {
+  width:100%; border:none; border-radius:18px; cursor:pointer;
+  background:#2B2622; color:#F7F2EA;
+  padding:30px 18px 26px 18px; margin-bottom:20px;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+}
+.escan .et {
+  font-size:22px; font-weight:600; letter-spacing:.14em;
+  margin-top:12px;
+}
+.escan .es { font-size:12.5px; opacity:.6; margin-top:5px; letter-spacing:.02em; }
+
+/* Cámara a pantalla completa */
+#camWrap {
+  position:fixed; inset:0; background:#000; z-index:9999;
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+}
+#camWrap video { width:100%; max-width:520px; }
+#camWrap .marco {
+  position:absolute; width:62vw; height:62vw; max-width:290px; max-height:290px;
+  border:3px solid rgba(255,255,255,.85); border-radius:20px;
+}
+#camWrap .txt {
+  position:absolute; bottom:96px; color:#fff; font-size:15px;
+  text-align:center; padding:0 24px; text-shadow:0 1px 4px rgba(0,0,0,.6);
+}
+#camWrap .cerrar {
+  position:absolute; bottom:28px; background:#fff; color:#2B2622;
+  border:none; border-radius:12px; padding:14px 32px; font-size:16px;
+}
+
+/* Mapa del depósito */
+.amb { margin-bottom:26px; }
+.amb > h3 { font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+            color:#A68A64; font-weight:600; margin:0 0 10px 0; }
+.mu { background:#fff; border:1px solid #E7DED2; border-radius:12px;
+      padding:11px 12px; margin-bottom:10px; }
+.mu .nom { font-size:12.5px; color:#8A8A8A; margin-bottom:8px; }
+.est { border-radius:6px; padding:8px 11px; margin-bottom:4px; cursor:pointer;
+       display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.est .u { font-size:13.5px; }
+.est .d { font-size:11.5px; opacity:.8; white-space:nowrap; }
+.est.marcado { outline:2.5px solid #B87F45; outline-offset:1px; }
+.filtro { display:flex; gap:8px; margin-bottom:14px; }
+.filtro button { flex:1; font-size:13px; padding:9px 6px; }
+.filtro button.on { background:#2B2622; color:#F7F2EA; border-color:#2B2622; }
+.leyenda { display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:#8A8A8A; margin-bottom:16px; }
+.leyenda i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:4px; vertical-align:-1px; font-style:normal; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="display marca">AINHOA</div>
+  <div class="sub">Depósito · Devoluciones</div>
+</header>
+<div id="aviso"></div>
+<div id="nav"></div>
+<div class="wrap" id="app"></div>
+
+<div id="camWrap">
+  <video id="cam" playsinline muted></video>
+  <div class="marco"></div>
+  <div class="txt">Apuntá al código del estante</div>
+  <button class="cerrar" id="camCerrar">Cancelar</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script>
+var API = "https://script.google.com/macros/s/AKfycbyZbEeODB-LF71H32WLSJafEKpl4sQNzMEiNQ2nvxK6LjNc1pmX0NMEbKSi5s7EXk9d/exec";
+
+var CARAMELO = "#B87F45", TAN = "#A68A64", GRAY = "#8A8A8A", GREEN = "#4C7A5E";
+var STOCK = "En stock";
+var ESTADOS = {
+  "Devuelta":            { label: "Devuelta",           color: CARAMELO },
+  "Última Oportunidad":  { label: "Última oportunidad", color: TAN },
+  "Revisar":             { label: "Revisar",            color: GRAY }
+};
+var TIPOS = [
+  {id:"Devolución preselección",     label:"Devolución preselección",     ayuda:"Lo que no quedó seleccionado al hacer stock"},
+  {id:"Devolución fin de temporada", label:"Devolución fin de temporada", ayuda:"Prendas que estuvieron a la venta y se devuelven"},
+  {id:"Para hacer stock",            label:"Para hacer stock",            ayuda:"Trajo la bolsa y todavía hay que ingresarla"}
+];
+function etiquetaTipo(t){
+  if(t === "Devolución preselección") return "Preselección";
+  if(t === "Devolución fin de temporada") return "Fin de temporada";
+  if(t === "Para hacer stock") return "Stock";
+  return t || "";
+}
+function colorTipo(t){
+  if(t === "Para hacer stock") return TAN;
+  if(t === "Devolución preselección") return GRAY;
+  return CARAMELO;
+}
+
+function colorEstado(e){
+  if(e==="Devuelta") return CARAMELO;
+  if(e==="Última Oportunidad") return TAN;
+  if(e==="Revisar") return GRAY;
+  if(e==="Vendida") return GREEN;
+  return TAN;
+}
+
+var ORDEN_PROV = [
+  {id:"nombre-az",     label:"Nombre A – Z"},
+  {id:"nombre-za",     label:"Nombre Z – A"},
+  {id:"mas-prendas",   label:"Más prendas primero"},
+  {id:"menos-prendas", label:"Menos prendas primero"},
+  {id:"ingreso-viejo", label:"Ingreso más antiguo primero"},
+  {id:"ingreso-nuevo", label:"Ingreso más reciente primero"}
+];
+var ORDEN_ITEMS = [
+  {id:"original",      label:"Orden original"},
+  {id:"ingreso-viejo", label:"Ingreso más antiguo primero"},
+  {id:"ingreso-nuevo", label:"Ingreso más reciente primero"}
+];
+
+var S = {
+  screen:"home",
+  resumen:{pendientesAviso:0, pendientesRevision:0},
+  provs:[], provQuery:"", ordenProv:"nombre-az", ordenAbierto:false,
+  prov:null, items:[], ordenItems:"original",
+  codQuery:"", resultados:[], buscando:false,
+  grupos:[], revisiones:[],
+  depQuery:"", depResultados:[], depBuscando:false, depTotal:0,
+  ubicaciones:[], mapa:null, moverBolsa:null, origenCarga:"lugar",
+  lugarSel:null, nueva:null, provBusq:"", provLista:[], provBuscando:false,
+  provTodas:null, provCargandoTodas:false, guardandoTexto:"",
+  mapaColor:"antiguedad", mapaProv:"",
+  bolsaCantidad:"",
+  guardando:{}, notaAbierta:null, notaTexto:""
+};
+
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function fechaCorta(iso){
+  if(!iso || iso.length < 10) return iso || "";
+  var p = iso.split("-");
+  return p[2] + "/" + p[1] + "/" + p[0].slice(2);
+}
+
+function api(action, params){
+  params = params || {};
+  var qs = "action=" + encodeURIComponent(action);
+  for(var k in params){
+    if(params[k] === undefined || params[k] === null) continue;
+    qs += "&" + k + "=" + encodeURIComponent(params[k]);
+  }
+  return fetch(API + "?" + qs)
+    .then(function(r){
+      if(!r.ok) throw new Error("No se pudo conectar con el Sheet");
+      return r.json();
+    })
+    .then(function(d){
+      if(d.ok === false) throw new Error(d.error || "Error del servidor");
+      return d;
+    });
+}
+
+var avisoTimer = null;
+function aviso(texto, tono){
+  var el = document.getElementById("aviso");
+  el.innerHTML = '<div class="aviso" style="background:' + (tono||GREEN) + '">' + esc(texto) + '</div>';
+  if(avisoTimer) clearTimeout(avisoTimer);
+  avisoTimer = setTimeout(function(){ el.innerHTML = ""; }, 2800);
+}
+
+/* ---------------- iconos ---------------- */
+function icono(n){
+  var a = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="' + TAN +
+          '" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">';
+  if(n==="buscar")  return a + '<circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.4" y1="15.4" x2="21" y2="21"/></svg>';
+  if(n==="codigo")  return a + '<path d="M12.6 2.8H21v8.4L11.2 21 3 12.8z"/><circle cx="17.1" cy="6.9" r="1.2"/></svg>';
+  if(n==="deposito") return a + '<path d="M3 8.5 12 4l9 4.5v7L12 20l-9-4.5z"/><path d="M3 8.5 12 13l9-4.5"/><path d="M12 13v7"/></svg>';
+  if(n==="aviso")   return a + '<rect x="4.5" y="3" width="15" height="18" rx="2.2"/><line x1="8.5" y1="8.5" x2="15.5" y2="8.5"/><line x1="8.5" y1="12.3" x2="15.5" y2="12.3"/><line x1="8.5" y1="16.1" x2="12.5" y2="16.1"/></svg>';
+  return a + '<path d="M12 3.2 21 20.4H3z"/><line x1="12" y1="10" x2="12" y2="14.4"/><line x1="12" y1="17.2" x2="12" y2="17.3"/></svg>';
+}
+
+/* ---------------- carga de datos ---------------- */
+function cargarResumen(){
+  api("devolResumen").then(function(r){
+    S.resumen = {pendientesAviso:r.pendientesAviso, pendientesRevision:r.pendientesRevision};
+    if(S.screen === "home") render();
+  }).catch(function(){});
+}
+
+function cargar(nombre){
+  S.cargando = true; S.error = null; render();
+  var p;
+  if(nombre === "provs")      p = api("devolProveedoras").then(function(r){ S.provs = r.proveedoras; });
+  else if(nombre === "items") p = api("devolPrendas", {prov:S.prov.num}).then(function(r){ S.items = r.prendas; });
+  else if(nombre === "grupos")p = api("devolPendientes").then(function(r){ S.grupos = r.grupos; });
+  else                        p = api("devolRevisiones").then(function(r){ S.revisiones = r.prendas; });
+  p.then(function(){ S.cargando = false; render(); })
+   .catch(function(e){ S.cargando = false; S.error = e.message; render(); });
+}
+
+function cargarUbicaciones(){
+  if(S.ubicaciones.length) return Promise.resolve();
+  return api("devolBolsaUbicaciones").then(function(r){ S.ubicaciones = r.muebles; })
+    .catch(function(e){ aviso("No se pudieron leer las ubicaciones: " + e.message, GRAY); });
+}
+
+function cargarMapa(luego){
+  S.cargando = true; render();
+  return api("devolMapa").then(function(r){
+    S.mapa = r; S.cargando = false;
+    if(luego) S.screen = luego;
+    render();
+  }).catch(function(e){ S.cargando = false; render(); aviso(e.message, GRAY); });
+}
+
+// Qué bolsas hay hoy en el lugar que estoy mirando.
+function bolsasDelLugar(){
+  if(!S.mapa || !S.lugarSel) return [];
+  var out = [];
+  S.mapa.muebles.forEach(function(m){
+    m.lugares.forEach(function(l){
+      if(l.mueble === S.lugarSel.mueble && l.ubicacion === S.lugarSel.ubicacion) out = l.bolsas;
+    });
+  });
+  return out;
+}
+
+function crearBolsaNueva(){
+  var n = S.nueva;
+  if(!n || !n.prov || !n.tipo || !n.ubicacion){ aviso("Faltan datos de la bolsa", GRAY); return; }
+  var params = {prov:n.prov.num, tipo:n.tipo, ubicacion:n.ubicacion, mueble:n.mueble || "", notas:""};
+  if(S.bolsaCantidad) params.cantidad = S.bolsaCantidad;
+  S.cargando = true; render();
+  api("devolBolsaCrear", params).then(function(r){
+    aviso("Bolsa de " + r.proveedora + " guardada en " + (r.mueble ? r.mueble + " · " : "") + r.ubicacion);
+    S.nueva = null; S.bolsaCantidad = ""; S.ubicaciones = [];
+    if(S.origenCarga === "lugar"){ cargarUbicaciones(); cargarMapa("lugar"); }
+    else { S.cargando = false; if(S.prov){ S.screen = "itemsProv"; cargar("items"); } else ir("deposito"); }
+  }).catch(function(e){
+    S.cargando = false; render();
+    aviso("No se guardó: " + e.message, GRAY);
+  });
+}
+
+/* Guarda N bolsas iguales (misma proveedora, mismo tipo, mismo
+   lugar) de una sola vez. Las manda una atrás de otra para que el
+   Sheet les de numeros distintos sin pisarse. */
+function crearVariasBolsas(cuantas){
+  var n = S.nueva;
+  if(!n || !n.prov || !n.tipo || !n.ubicacion){ aviso("Faltan datos de la bolsa", GRAY); return; }
+  cuantas = parseInt(cuantas, 10) || 1;
+
+  S.cargando = true; S.guardandoTexto = cuantas > 1 ? "Guardando 1 de " + cuantas + "…" : "Guardando la bolsa…";
+  render();
+
+  var params = {prov:n.prov.num, tipo:n.tipo, ubicacion:n.ubicacion, mueble:n.mueble || ""};
+  var nombreProv = n.prov.nombre, lugar = (n.mueble ? n.mueble + " · " : "") + n.ubicacion;
+  var hechas = 0;
+
+  function una(){
+    return api("devolBolsaCrear", params).then(function(){
+      hechas++;
+      if(hechas < cuantas){
+        S.guardandoTexto = "Guardando " + (hechas + 1) + " de " + cuantas + "…";
+        render();
+        return una();
+      }
+    });
+  }
+
+  una().then(function(){
+    aviso((cuantas > 1 ? cuantas + " bolsas de " : "Bolsa de ") + nombreProv + " en " + lugar);
+    S.nueva = null; S.bolsaCantidad = ""; S.ubicaciones = []; S.guardandoTexto = "";
+    if(S.origenCarga === "lugar"){ cargarUbicaciones(); cargarMapa("lugar"); }
+    else { S.cargando = false; escribiendo = false; if(S.prov){ S.screen = "itemsProv"; cargar("items"); } else ir("deposito"); }
+  }).catch(function(e){
+    S.cargando = false; S.guardandoTexto = ""; escribiendo = false; render();
+    aviso((hechas ? "Se guardaron " + hechas + ". Falló el resto: " : "No se guardó: ") + e.message, GRAY);
+  });
+}
+
+function entregarBolsa(nro){
+  api("devolBolsaEntregar", {bolsa:nro}).then(function(){
+    aviso("Bolsa " + nro + " cerrada");
+    S.ubicaciones = [];
+    if(S.screen === "lugar") cargarMapa("lugar");
+    else buscarDeposito(S.depQuery, true);
+  }).catch(function(e){ aviso("No se guardó: " + e.message, GRAY); });
+}
+
+function entregarTodo(prov, nombre){
+  api("devolBolsaEntregarTodo", {prov:prov}).then(function(r){
+    aviso(nombre + " retiró sus " + r.cerradas + (r.cerradas===1?" bolsa":" bolsas"));
+    S.ubicaciones = [];
+    buscarDeposito(S.depQuery, true);
+  }).catch(function(e){ aviso("No se guardó: " + e.message, GRAY); });
+}
+
+function moverBolsa(ubicacion, mueble){
+  api("devolBolsaMover", {bolsa:S.moverBolsa, ubicacion:ubicacion, mueble:mueble || ""}).then(function(r){
+    aviso(r.proveedora + ": " + r.antes + " → " + r.ahora);
+    S.moverBolsa = null; S.bolsaMueble = null; S.ubicaciones = [];
+    if(S.origenCarga === "lugar"){ cargarUbicaciones(); cargarMapa("lugar"); }
+    else { S.screen = "deposito"; render(); if(S.depQuery) buscarDeposito(S.depQuery, true); }
+  }).catch(function(e){ aviso("No se guardó: " + e.message, GRAY); });
+}
+
+var timerProvB = null, provBId = 0;
+/* La lista de proveedoras se baja UNA sola vez y despues se filtra
+   en el celular. Antes cada letra que escribias iba y volvia del
+   servidor: por eso tardaba varios segundos. */
+/* ============================================================
+   ESCANER DE QR
+   Abre la camara del celular dentro de la app y lee el codigo
+   del estante. Al leerlo entra directo a ese lugar. No hace
+   falta instalar nada: es la camara del navegador.
+   ============================================================ */
+var camStream = null, camRAF = null;
+
+function abrirCamara(){
+  if(typeof jsQR !== "function"){
+    aviso("No se pudo cargar el lector. Usá la cámara del celular.", GRAY);
+    return;
+  }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    aviso("Este navegador no permite usar la cámara", GRAY);
+    return;
+  }
+
+  var wrap = document.getElementById("camWrap");
+  var video = document.getElementById("cam");
+  wrap.style.display = "flex";
+
+  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}}})
+    .then(function(st){
+      camStream = st;
+      video.srcObject = st;
+      video.setAttribute("playsinline", true);
+      video.play();
+      leerFrames(video);
+    })
+    .catch(function(){
+      cerrarCamara();
+      aviso("No diste permiso para la cámara", GRAY);
+    });
+}
+
+function leerFrames(video){
+  var lienzo = document.createElement("canvas");
+  var ctx = lienzo.getContext("2d", {willReadFrequently:true});
+
+  function tick(){
+    if(!camStream) return;
+    if(video.readyState === video.HAVE_ENOUGH_DATA){
+      lienzo.width  = video.videoWidth;
+      lienzo.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, lienzo.width, lienzo.height);
+      var img = ctx.getImageData(0, 0, lienzo.width, lienzo.height);
+      var code = jsQR(img.data, img.width, img.height, {inversionAttempts:"dontInvert"});
+      if(code && code.data){
+        cerrarCamara();
+        irAlLugarDeLink(code.data);
+        return;
+      }
+    }
+    camRAF = requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+function cerrarCamara(){
+  if(camRAF) cancelAnimationFrame(camRAF);
+  camRAF = null;
+  if(camStream){
+    camStream.getTracks().forEach(function(t){ t.stop(); });
+    camStream = null;
+  }
+  var wrap = document.getElementById("camWrap");
+  if(wrap) wrap.style.display = "none";
+}
+
+// Toma la direccion leida del QR y abre ese estante sin recargar.
+function irAlLugarDeLink(texto){
+  var u = "", m = "";
+  try {
+    var qs = texto.indexOf("?") > -1 ? texto.split("?")[1] : texto;
+    qs.split("&").forEach(function(par){
+      var kv = par.split("=");
+      var k = kv[0], v = decodeURIComponent((kv[1] || "").replace(/\+/g, " "));
+      if(k === "u") u = v;
+      if(k === "m") m = v;
+    });
+  } catch(err){ u = ""; }
+
+  if(!u){ aviso("Ese código no es de un estante de Ainhoa", GRAY); return; }
+
+  S.origenCarga = "lugar";
+  S.lugarSel = {mueble:m, ubicacion:u};
+  cargarMapa("lugar");
+}
+
+/* ============================================================
+   MAPA DEL DEPOSITO
+   Agrupa los muebles por ambiente de la casa y dibuja cada uno
+   con sus estantes apilados como estan en la realidad.
+   ============================================================ */
+var AMBIENTES = [
+  {nombre:"Pasillo",          test:function(m){ return /pasillo/i.test(m); }},
+  {nombre:"Depósito",         test:function(m){ return /^deposito/i.test(m) || /placard deposito/i.test(m); }},
+  {nombre:"Escritorio",       test:function(m){ return /escritorio/i.test(m); }},
+  {nombre:"Cuarto fiesta",    test:function(m){ return /fiesta/i.test(m); }},
+  {nombre:"Baño",             test:function(m){ return /ba(ñ|n)o/i.test(m); }},
+  {nombre:"Otros",            test:function(){ return true; }}
+];
+
+function ambienteDe(mueble){
+  for(var i = 0; i < AMBIENTES.length; i++){
+    if(AMBIENTES[i].test(mueble || "")) return AMBIENTES[i].nombre;
+  }
+  return "Otros";
+}
+
+// De arriba hacia abajo, como se ve el mueble parada enfrente.
+function ordenLugar(u){
+  var t = String(u || "").toLowerCase();
+  if(t.indexOf("rooftop") > -1) return 0;
+  var m = t.match(/estante\s*(\d+)/);
+  if(m) return 100 - parseInt(m[1], 10);
+  if(t.indexOf("mesa") > -1) return 200;
+  if(t.indexOf("barral") > -1) return 210;
+  if(t.indexOf("piso") > -1) return 220;
+  if(t.indexOf("baulera") > -1) return 230;
+  if(t.indexOf("adera") > -1) return 240;
+  return 250;
+}
+
+function diasDesde(f){
+  if(!f) return null;
+  var d = new Date(String(f).slice(0,10) + "T00:00:00");
+  if(isNaN(d)) return null;
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+  return Math.floor((hoy - d) / 86400000);
+}
+
+// Devuelve {fondo, texto, nota} para un lugar segun el filtro elegido.
+function colorLugar(l){
+  var n = l.bolsas.length;
+  if(!n) return {fondo:"#F1EFE8", texto:"#8A8A8A", nota:"vacío"};
+
+  if(S.mapaColor === "cantidad"){
+    var cap = parseInt(l.capacidad, 10) || 0;
+    var lleno = cap ? (n / cap) : (n / 5);
+    if(lleno >= 1)   return {fondo:"#F7C1C1", texto:"#791F1F", nota:n + (cap ? " de " + cap : "")};
+    if(lleno >= .6)  return {fondo:"#FAC775", texto:"#854F0B", nota:n + (cap ? " de " + cap : "")};
+    return {fondo:"#C0DD97", texto:"#27500A", nota:n + (cap ? " de " + cap : "")};
+  }
+
+  var masVieja = null;
+  l.bolsas.forEach(function(b){
+    var d = diasDesde(b.fecha);
+    if(d !== null && (masVieja === null || d > masVieja)) masVieja = d;
+  });
+  if(masVieja === null) return {fondo:"#C0DD97", texto:"#27500A", nota:n + (n===1?" bolsa":" bolsas")};
+  if(masVieja > 60) return {fondo:"#F7C1C1", texto:"#791F1F", nota:"hace " + masVieja + " días"};
+  if(masVieja > 30) return {fondo:"#FAC775", texto:"#854F0B", nota:"hace " + masVieja + " días"};
+  return {fondo:"#C0DD97", texto:"#27500A", nota:"hace " + masVieja + " días"};
+}
+
+function lugarTieneProv(l){
+  var q = normTxt(S.mapaProv).trim();
+  if(!q) return false;
+  for(var i = 0; i < l.bolsas.length; i++){
+    var b = l.bolsas[i];
+    if(normTxt(b.proveedora).indexOf(q) > -1 || String(b.provNum).indexOf(q) === 0) return true;
+  }
+  return false;
+}
+
+function cargarProvTodas(){
+  if(S.provTodas) return Promise.resolve();
+  S.provCargandoTodas = true;
+  return api("getSheet", {sheet:"BD_Prov"}).then(function(r){
+    var out = [];
+    (r.rows || []).forEach(function(row){
+      var num = row["a"];
+      if(num === "" || num === undefined || num === null) return;
+      out.push({num:String(num).trim(), nombre:String(row["Proveedor"] || "").trim()});
+    });
+    S.provTodas = out;
+    S.provCargandoTodas = false;
+  }).catch(function(e){
+    S.provCargandoTodas = false;
+    aviso("No se pudo leer la lista de proveedoras: " + e.message, GRAY);
+  });
+}
+
+function normTxt(v){
+  return String(v || "").toLowerCase()
+    .replace(/[áà]/g,"a").replace(/[éè]/g,"e").replace(/[íì]/g,"i")
+    .replace(/[óò]/g,"o").replace(/[úù]/g,"u").replace(/ñ/g,"n");
+}
+
+// Filtra al instante, sin ir al servidor. Las que empiezan con lo
+// que escribiste van primero.
+function provFiltradasLocal(){
+  var q = normTxt(S.provBusq).trim();
+  if(!q || !S.provTodas) return [];
+  var empieza = [], contiene = [];
+  for(var i = 0; i < S.provTodas.length; i++){
+    var p = S.provTodas[i];
+    var n = normTxt(p.nombre), num = String(p.num);
+    if(n.indexOf(q) === 0 || num.indexOf(q) === 0) empieza.push(p);
+    else if(n.indexOf(q) > -1 || num.indexOf(q) > -1) contiene.push(p);
+    if(empieza.length >= 30) break;
+  }
+  return empieza.concat(contiene).slice(0, 30);
+}
+
+function htmlListaProvBolsa(){
+  if(S.provCargandoTodas) return '<div class="cargando">Cargando proveedoras…</div>';
+  if(!S.provBusq.trim()) return "";
+  var lista = provFiltradasLocal();
+  if(!lista.length) return '<div class="cargando">Sin resultados</div>';
+  var h = "";
+  lista.forEach(function(p){
+    h += '<div class="card" data-a="elegiProv" data-num="' + esc(p.num) + '" data-nom="' + esc(p.nombre) + '">' +
+         '<div style="font-size:16px;font-weight:600">' + esc(p.num) + ' — ' + esc(p.nombre) + '</div></div>';
+  });
+  return h;
+}
+
+function buscarProvParaBolsa(q){
+  q = String(q || "").trim();
+  if(!q){ S.provLista = []; S.provBuscando = false; render(); return; }
+  var mio = ++provBId;
+  S.provBuscando = true; render();
+  api("devolBolsaBuscar", {q:q}).then(function(r){
+    if(mio !== provBId) return;
+    S.provLista = r.proveedoras; S.provBuscando = false; render();
+  }).catch(function(e){
+    if(mio !== provBId) return;
+    S.provLista = []; S.provBuscando = false; render(); aviso(e.message, GRAY);
+  });
+}
+
+var timerDep = null, depId = 0;
+function buscarDeposito(q, yaCargado){
+  q = String(q || "").trim();
+  if(q.length < 1){ S.depResultados = []; S.depBuscando = false; render(); return; }
+  var mio = ++depId;
+  S.depBuscando = !yaCargado; render();
+  api("devolBolsaBuscar", {q:q}).then(function(r){
+    if(mio !== depId) return;
+    S.depResultados = r.proveedoras; S.depTotal = r.total || r.proveedoras.length;
+    S.depBuscando = false; render();
+  }).catch(function(e){
+    if(mio !== depId) return;
+    S.depResultados = []; S.depBuscando = false; render(); aviso(e.message, GRAY);
+  });
+}
+
+function ir(screen){
+  S.screen = screen; S.error = null; S.ordenAbierto = false;
+  S.notaAbierta = null; S.notaTexto = "";
+  if(screen === "buscarProv"){ S.provQuery = ""; cargar("provs"); return; }
+  if(screen === "pendientes"){ cargar("grupos"); return; }
+  if(screen === "revision"){ cargar("revisiones"); return; }
+  if(screen === "buscarCodigo"){ S.codQuery = ""; S.resultados = []; }
+  if(screen === "deposito"){ S.depQuery = ""; S.depResultados = []; }
+  if(screen === "cargarMueble"){ S.bolsaMueble = null; cargarUbicaciones().then(render); }
+  if(screen === "mapa"){ cargarMapa(); }
+  if(screen === "home") cargarResumen();
+  render();
+}
+
+function actualizarPrenda(codigo, cambios){
+  function ap(l){
+    for(var i=0;i<l.length;i++){
+      if(l[i].codigo === codigo) for(var k in cambios) l[i][k] = cambios[k];
+    }
+  }
+  ap(S.items); ap(S.resultados); ap(S.revisiones);
+}
+
+function marcar(codigo, fila, estado, nota){
+  if(S.guardando[codigo]) return;
+  S.guardando[codigo] = true; render();
+  var params = {codigo:codigo, estado:estado, fila:fila};
+  if(nota) params.nota = nota;
+  api("devolMarcar", params).then(function(r){
+    var cambios = {estado:r.estado};
+    if(nota) cambios.nota = nota;
+    actualizarPrenda(codigo, cambios);
+    S.notaAbierta = null; S.notaTexto = "";
+    S.guardando[codigo] = false;
+    render();
+    if(estado === "Revisar") aviso(codigo + " quedó en Pendientes de revisión");
+  }).catch(function(e){
+    S.guardando[codigo] = false;
+    aviso("No se guardó: " + e.message, GRAY);
+    render();
+  });
+}
+
+function yaAvise(num){
+  var clave = "prov" + num;
+  if(S.guardando[clave]) return;
+  S.guardando[clave] = true; render();
+  api("devolAvisar", {prov:num}).then(function(){
+    S.grupos = S.grupos.filter(function(g){ return String(g.num) !== String(num); });
+    S.guardando[clave] = false;
+    render();
+  }).catch(function(e){
+    S.guardando[clave] = false;
+    aviso("No se guardó: " + e.message, GRAY);
+    render();
+  });
+}
+
+function mensajeWa(g){
+  var lista = g.prendas.map(function(i){ return "• " + i.producto + " (" + i.codigo + ")"; }).join("\n");
+  return "¡Hola " + g.nombre + "! 💛 Tenés estas prendas para retirar en Ainhoa:\n\n" +
+         lista + "\n\nAvisanos cuándo podés pasar. ¡Gracias!";
+}
+function copiar(texto){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(texto).then(function(){ aviso("Mensaje copiado"); })
+      .catch(function(){ aviso("No se pudo copiar. Mantené apretado el texto.", GRAY); });
+  } else {
+    aviso("No se pudo copiar. Mantené apretado el texto.", GRAY);
+  }
+}
+
+/* ---------------- orden ---------------- */
+function provsFiltradas(){
+  var q = S.provQuery.trim().toLowerCase();
+  var l = S.provs.filter(function(p){
+    if(!q) return true;
+    return String(p.num).indexOf(q) > -1 || p.nombre.toLowerCase().indexOf(q) > -1;
+  });
+  var o = S.ordenProv;
+  return l.slice().sort(function(a,b){
+    if(o==="nombre-za")     return b.nombre.localeCompare(a.nombre);
+    if(o==="mas-prendas")   return b.cantidad - a.cantidad;
+    if(o==="menos-prendas") return a.cantidad - b.cantidad;
+    if(o==="ingreso-viejo") return String(a.primerIngreso).localeCompare(String(b.primerIngreso));
+    if(o==="ingreso-nuevo") return String(b.primerIngreso).localeCompare(String(a.primerIngreso));
+    return a.nombre.localeCompare(b.nombre);
+  });
+}
+function itemsOrdenados(){
+  if(S.ordenItems === "original") return S.items;
+  var signo = S.ordenItems === "ingreso-nuevo" ? -1 : 1;
+  return S.items.slice().sort(function(a,b){
+    return String(a.fecha).localeCompare(String(b.fecha)) * signo;
+  });
+}
+
+/* ---------------- vistas ---------------- */
+function vOrden(opciones, valor, tipo){
+  var actual = opciones.filter(function(o){ return o.id === valor; })[0] || opciones[0];
+  var h = '<div class="orden"><button class="btn" data-a="abrirOrden">' +
+          '<span><span class="et">Ordenar: </span>' + esc(actual.label) + '</span>' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + TAN +
+          '" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"' +
+          (S.ordenAbierto ? ' style="transform:rotate(180deg)"' : '') +
+          '><polyline points="6 9 12 15 18 9"/></svg></button>';
+  if(S.ordenAbierto){
+    h += '<div class="menu">';
+    opciones.forEach(function(o){
+      h += '<button class="' + (o.id===valor?'on':'') + '" data-a="orden" data-tipo="' + tipo +
+           '" data-id="' + o.id + '">' + esc(o.label) + '</button>';
+    });
+    h += '</div>';
+  }
+  return h + '</div>';
+}
+
+function htmlListaCod(){
+  if(S.buscando) return '<div class="cargando">Buscando…</div>';
+  if(S.resultados.length){
+    var h = "";
+    S.resultados.forEach(function(it){ h += vPrenda(it, true); });
+    return h;
+  }
+  if(S.codQuery.trim().length >= 2) return '<div class="vacio">No hay prendas con ese código.</div>';
+  return "";
+}
+
+function htmlListaProv(){
+  var lp = provsFiltradas(), cont = "";
+  lp.forEach(function(p){
+    cont += '<div class="card" data-a="verProv" data-num="' + esc(p.num) + '">' +
+            '<div style="font-size:16px;font-weight:600">' + esc(p.num) + ' — ' + esc(p.nombre) + '</div>' +
+            '<div class="prov" style="margin-top:2px">' + p.cantidad + (p.cantidad===1?' prenda':' prendas') +
+            (p.primerIngreso ? ' · primer ingreso ' + fechaCorta(p.primerIngreso) : '') + '</div></div>';
+  });
+  return vListaEstado("No se encontró ninguna proveedora con ese nombre.", cont);
+}
+
+function vPrenda(it, mostrarProv){
+  var busy = !!S.guardando[it.codigo];
+  var estado = it.estado || "";
+  var h = '<div class="prenda' + (busy?' busy':'') + '">' +
+    '<div class="fila"><div class="cod">' + esc(it.codigo) + '</div>' +
+    '<span class="tag" style="background:' + colorEstado(estado) + '22;color:' + colorEstado(estado) + '">' +
+    esc(estado || STOCK) + '</span></div>' +
+    '<div class="prod">' + esc(it.producto) + '</div>';
+  if(mostrarProv) h += '<div class="prov">' + esc(it.provNum) + ' — ' + esc(it.proveedor) + '</div>';
+  if(it.fecha) h += '<div class="fecha">Ingresó ' + fechaCorta(it.fecha) + '</div>';
+  if(it.nota && S.notaAbierta !== it.codigo) h += '<div class="nota">' + esc(it.nota) + '</div>';
+
+  // Una prenda vendida no se toca desde acá: las ventas se cargan en la app de
+  // ventas y dejarla editable permitiría "desvender" algo sin querer.
+  if(estado === "Vendida"){
+    return h + '<div class="nota" style="margin:0">Vendida. Se gestiona desde la app de ventas.</div></div>';
+  }
+
+  h += '<div class="estados">';
+  ["Devuelta","Última Oportunidad","Revisar"].forEach(function(v){
+    var on = estado === v, c = ESTADOS[v].color;
+    h += '<button class="eb" data-a="' + (v==="Revisar"?"abrirNota":"marcar") + '" data-cod="' + esc(it.codigo) +
+         '" data-fila="' + esc(it.fila) + '" data-estado="' + esc(v) + '" style="' +
+         (on ? 'background:' + c + ';color:#fff;border:none' : 'color:' + c + ';border:1px solid ' + c + '55') +
+         '">' + ESTADOS[v].label + '</button>';
+  });
+  h += '</div>';
+
+  if(estado) h += '<button class="stock-btn" data-a="marcar" data-cod="' + esc(it.codigo) +
+                  '" data-fila="' + esc(it.fila) + '" data-estado="' + STOCK + '">Volver a stock</button>';
+
+  if(S.notaAbierta === it.codigo){
+    h += '<div class="campo"><div class="titulo">¿Qué hay que revisar?</div>' +
+         '<input id="notaInput" value="' + esc(S.notaTexto) +
+         '" placeholder="Ej: no encuentro la prenda, tiene una mancha, código incorrecto…">' +
+         '<div class="acciones">' +
+         '<button class="guardar" data-a="guardarNota" data-cod="' + esc(it.codigo) + '" data-fila="' + esc(it.fila) + '">Guardar</button>' +
+         '<button class="cancelar" data-a="cancelarNota">Cancelar</button></div></div>';
+  }
+  return h + '</div>';
+}
+
+function vElegirLugar(accion){
+  accion = accion || "lugar";
+  var h = '';
+  if(!S.bolsaMueble){
+    S.ubicaciones.forEach(function(m){
+      h += '<div class="card" data-a="mueble" data-m="' + esc(m.nombre) + '">' +
+           '<div style="font-size:16px">' + esc(m.nombre) + '</div>' +
+           '<div class="prov" style="margin-top:2px">' + m.lugares.length + ' lugares</div></div>';
+    });
+    if(!S.ubicaciones.length) h += '<div class="vacio">No hay lugares cargados en la hoja Ubicaciones.</div>';
+  } else {
+    var m = S.ubicaciones.filter(function(x){ return x.nombre === S.bolsaMueble; })[0];
+    h += '<p class="conteo">' + esc(S.bolsaMueble).toUpperCase() + '</p>';
+    if(m) m.lugares.forEach(function(l){
+      h += '<div class="card" data-a="' + accion + '" data-m="' + esc(l.mueble) + '" data-u="' + esc(l.ubicacion) + '">' +
+           '<div style="font-size:16px">' + esc(l.ubicacion) + '</div>' +
+           '<div class="prov" style="margin-top:2px">' +
+           (l.bolsas ? l.bolsas + (l.bolsas===1?' bolsa':' bolsas') : 'vacío') + '</div></div>';
+    });
+    h += '<button class="volver" data-a="mueble" data-m="">← Otro mueble</button>';
+  }
+  return h;
+}
+
+function vListaEstado(vacioTexto, contenido){
+  if(S.cargando) return '<div class="cargando">Cargando…</div>';
+  if(S.error) return '<div class="errorbox"><div>' + esc(S.error) +
+    '</div><button data-a="reintentar">Reintentar</button></div>';
+  if(!contenido) return '<div class="vacio">' + esc(vacioTexto) + '</div>';
+  return contenido;
+}
+
+function render(){
+  var h = "";
+  if(S.screen === "home"){
+    h += '<button class="escan" data-a="escanear">' +
+         '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#F7F2EA" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">' +
+         '<path d="M3 8V5.5A2.5 2.5 0 0 1 5.5 3H8"/><path d="M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8"/>' +
+         '<path d="M21 16v2.5a2.5 2.5 0 0 1-2.5 2.5H16"/><path d="M8 21H5.5A2.5 2.5 0 0 1 3 18.5V16"/>' +
+         '<rect x="7" y="7" width="4" height="4" rx="1"/><rect x="13" y="13" width="4" height="4" rx="1"/>' +
+         '<line x1="13" y1="7.5" x2="17" y2="7.5"/><line x1="7.5" y1="13" x2="7.5" y2="17"/></svg>' +
+         '<span class="et">ESCANEAR</span>' +
+         '<span class="es">Gestión de depósito</span></button>';
+
+    var pend = (S.resumen.pendientesAviso || 0) + (S.resumen.pendientesRevision || 0);
+    var cards = [
+      ["codigo","Devoluciones","Fin de temporada · registrar por código","menuDevol",0],
+      ["deposito","Depósito","Bolsas, proveedoras y pendientes","menuDep",pend]
+    ];
+    cards.forEach(function(c){
+      h += '<div class="card landing" data-a="ir" data-s="' + c[3] + '">' +
+           '<div class="ic">' + icono(c[0]) + '</div><div class="tx"><div class="t">' + c[1] +
+           '</div><div class="s">' + c[2] + '</div></div>' +
+           (c[4] > 0 ? '<span class="tag" style="background:' + CARAMELO + '22;color:' + CARAMELO + '">' + c[4] + '</span>' : '') +
+           '</div>';
+    });
+    h += '<button class="volver" style="width:100%;text-align:center" data-a="refrescar">Actualizar datos del Excel</button>';
+  }
+
+  else if(S.screen === "menuDevol"){
+    h += '<p class="conteo">DEVOLUCIONES</p>';
+    h += '<div class="card landing" data-a="ir" data-s="buscarCodigo">' +
+         '<div class="ic">' + icono("codigo") + '</div><div class="tx">' +
+         '<div class="t">Registrar por código</div>' +
+         '<div class="s">Marcar una prenda puntual</div></div></div>';
+    h += '<div class="card landing" data-a="ir" data-s="buscarProv">' +
+         '<div class="ic">' + icono("buscar") + '</div><div class="tx">' +
+         '<div class="t">Buscar por proveedora</div>' +
+         '<div class="s">Ver y gestionar sus prendas</div></div></div>';
+    h += '<button class="volver" data-a="ir" data-s="home">← Volver</button>';
+  }
+
+  else if(S.screen === "menuDep"){
+    h += '<p class="conteo">DEPÓSITO</p>';
+    var cd = [
+      ["buscar","Buscar por proveedora","Dónde están sus bolsas","deposito",0],
+      ["aviso","Pendientes de aviso","Devoluciones listas para comunicar","pendientes",S.resumen.pendientesAviso],
+      ["revisar","Pendientes de revisión","Prendas marcadas para revisar","revision",S.resumen.pendientesRevision],
+      ["deposito","Todo el depósito","El mapa completo, lugar por lugar","mapa",0]
+    ];
+    cd.forEach(function(c){
+      h += '<div class="card landing" data-a="ir" data-s="' + c[3] + '">' +
+           '<div class="ic">' + icono(c[0]) + '</div><div class="tx"><div class="t">' + c[1] +
+           '</div><div class="s">' + c[2] + '</div></div>' +
+           (c[4] > 0 ? '<span class="tag" style="background:' + CARAMELO + '22;color:' + CARAMELO + '">' + c[4] + '</span>' : '') +
+           '</div>';
+    });
+    h += '<button class="volver" data-a="ir" data-s="home">← Volver</button>';
+  }
+
+  else if(S.screen === "buscarProv"){
+    h += '<input class="buscador" id="qProv" value="' + esc(S.provQuery) + '" placeholder="Nombre o número de proveedora">';
+    h += vOrden(ORDEN_PROV, S.ordenProv, "prov");
+    h += '<div id="listaProv">' + htmlListaProv() + '</div>';
+    h += '<button class="volver" data-a="ir" data-s="menuDevol">← Volver</button>';
+  }
+
+  else if(S.screen === "itemsProv"){
+    h += '<div class="titulo-prov">' + esc(S.prov.num) + ' — ' + esc(S.prov.nombre) + '</div>';
+    h += vOrden(ORDEN_ITEMS, S.ordenItems, "items");
+    var li = itemsOrdenados(), c2 = "";
+    if(li.length){
+      c2 = '<p class="conteo">PRENDAS PARA GESTIONAR · ' + li.length + '</p>';
+      li.forEach(function(it){ c2 += vPrenda(it, false); });
+    }
+    h += vListaEstado("Esta proveedora no tiene prendas para gestionar.", c2);
+    h += '<div class="acc" style="margin-top:14px"><button class="prim" data-a="abrirBolsa" data-num="' +
+         esc(S.prov.num) + '" data-nom="' + esc(S.prov.nombre) + '">Guardar bolsa en depósito</button></div>';
+    h += '<button class="volver" data-a="ir" data-s="buscarProv">← Otra proveedora</button>';
+  }
+
+  else if(S.screen === "buscarCodigo"){
+    h += '<input class="buscador" id="qCod" value="' + esc(S.codQuery) + '" placeholder="Código o nombre de la prenda">';
+    h += '<div id="listaCod">' + htmlListaCod() + '</div>';
+    h += '<button class="volver" data-a="ir" data-s="home">← Volver</button>';
+  }
+
+  else if(S.screen === "pendientes"){
+    var c3 = "";
+    S.grupos.forEach(function(g){
+      var busy = !!S.guardando["prov" + g.num];
+      c3 += '<div class="card' + (busy?' busy':'') + '" style="cursor:default">' +
+            '<div style="font-weight:600;margin-bottom:8px">' + esc(g.nombre) +
+            ' <span class="tag" style="background:' + CARAMELO + '22;color:' + CARAMELO + '">' + g.prendas.length + '</span></div>';
+      g.prendas.forEach(function(i){
+        c3 += '<div style="font-size:13px;color:#666;margin-bottom:2px"><span style="color:' + CARAMELO + '">' +
+              esc(i.codigo) + '</span> · ' + esc(i.producto) + '</div>';
+      });
+      c3 += '<div class="acc">';
+      if(g.wa) c3 += '<button class="wa" data-a="wa" data-num="' + esc(g.num) + '">Abrir WhatsApp</button>';
+      c3 += '<button class="' + (g.wa?'':'prim') + '" data-a="copiar" data-num="' + esc(g.num) + '">Copiar mensaje</button>';
+      c3 += '<button data-a="yaAvise" data-num="' + esc(g.num) + '">Ya avisé</button>';
+      c3 += '</div></div>';
+    });
+    h += vListaEstado("No hay devoluciones pendientes de aviso.", c3);
+    h += '<button class="volver" data-a="ir" data-s="home">← Volver</button>';
+  }
+
+  else if(S.screen === "cargarMueble"){
+    h += '<p class="conteo">¿EN QUÉ MUEBLE ESTÁS?</p>';
+    if(S.cargando) h += '<div class="cargando">Cargando…</div>';
+    else h += vElegirLugar("abrirLugar");
+    h += '<button class="volver" data-a="ir" data-s="deposito">← Volver</button>';
+  }
+
+  else if(S.screen === "lugar"){
+    var lu = S.lugarSel || {};
+    h += '<div class="titulo-prov">' + esc(lu.mueble ? lu.mueble + " · " + lu.ubicacion : lu.ubicacion) + '</div>';
+    if(S.cargando) h += '<div class="cargando">Cargando…</div>';
+    else {
+      var bs = bolsasDelLugar();
+      h += '<p class="conteo">' + (bs.length ? bs.length + (bs.length===1?' BOLSA ACÁ':' BOLSAS ACÁ') : 'LUGAR VACÍO') + '</p>';
+      bs.forEach(function(b){
+        h += '<div class="card" style="cursor:default">' +
+             '<div class="fila"><div style="font-size:16px">' + esc(b.proveedora) + '</div>' +
+             '<span class="tag" style="background:' + colorTipo(b.tipo) + '22;color:' + colorTipo(b.tipo) + '">' +
+             esc(etiquetaTipo(b.tipo)) + '</span></div>' +
+             '<div class="fecha">' + esc(b.nro) + (b.cantidad ? ' · ' + b.cantidad + ' prendas' : '') +
+             (b.fecha ? ' · desde ' + fechaCorta(b.fecha) : '') + '</div>' +
+             '<div class="acc"><button data-a="mover" data-nro="' + esc(b.nro) + '">Cambiar de lugar</button>' +
+             '<button data-a="entregar" data-nro="' + esc(b.nro) + '">' +
+             (b.tipo === "Para hacer stock" ? "Ya le hice el stock" : "La retiró") + '</button>' +
+             '<button class="borrar" data-a="anular" data-nro="' + esc(b.nro) + '" data-nom="' +
+             esc(b.proveedora) + '">Eliminar</button></div></div>';
+      });
+      h += '<div class="acc" style="margin-top:14px"><button class="prim" data-a="agregarAca">Agregar bolsa acá</button></div>';
+    }
+    h += '<button class="volver" data-a="ir" data-s="cargarMueble">← Otro lugar</button>';
+  }
+
+  else if(S.screen === "elegirProv"){
+    h += '<p class="conteo">¿DE QUÉ PROVEEDORA ES?</p>';
+    h += '<input class="buscador" id="qProvB" value="' + esc(S.provBusq) + '" placeholder="Nombre o número">';
+    h += '<div id="listaProvBolsa">' + htmlListaProvBolsa() + '</div>';
+    h += '<button class="volver" data-a="atras">← Cancelar</button>';
+  }
+
+  else if(S.screen === "elegirTipo"){
+    var nv = S.nueva || {};
+    h += '<div class="titulo-prov">' + esc(nv.prov ? nv.prov.nombre : "") + '</div>';
+    h += '<p class="conteo">¿QUÉ TIPO DE BOLSA ES?</p>';
+    if(S.cargando){
+      h += '<div class="cargando">' + esc(S.guardandoTexto || "Guardando la bolsa…") + '</div>';
+    } else {
+      TIPOS.forEach(function(t){
+        h += '<div class="card" data-a="elegiTipo" data-t="' + esc(t.id) + '">' +
+             '<div style="font-size:16px">' + esc(t.label) + '</div>' +
+             '<div class="prov" style="margin-top:2px">' + esc(t.ayuda) + '</div></div>';
+      });
+      h += '<button class="volver" data-a="atras">← Cancelar</button>';
+    }
+  }
+
+  else if(S.screen === "cantBolsas"){
+    var nvc = S.nueva || {};
+    h += '<div class="titulo-prov">' + esc(nvc.prov ? nvc.prov.nombre : "") + '</div>';
+    if(S.cargando){
+      h += '<div class="cargando">' + esc(S.guardandoTexto || "Guardando…") + '</div>';
+    } else {
+      h += '<p class="conteo">¿CUÁNTAS BOLSAS DEJÁS ACÁ?</p>';
+      [1,2,3,4,5,6].forEach(function(nb){
+        h += '<div class="card" data-a="elegiCant" data-n="' + nb + '" style="text-align:center">' +
+             '<div style="font-size:20px;font-weight:600">' + nb + '</div>' +
+             '<div class="prov" style="margin-top:2px">' + (nb===1?'una bolsa':nb + ' bolsas') + '</div></div>';
+      });
+      h += '<button class="volver" data-a="atras">← Cancelar</button>';
+    }
+  }
+
+  else if(S.screen === "elegirLugarNueva"){
+    var nv2 = S.nueva || {};
+    h += '<div class="titulo-prov">' + esc(nv2.prov ? nv2.prov.nombre : "") + '</div>';
+    h += '<p class="conteo">¿DÓNDE LA GUARDÁS?</p>';
+    h += vElegirLugar("lugarNueva");
+    h += '<button class="volver" data-a="atras">← Cancelar</button>';
+  }
+
+  else if(S.screen === "mapa"){
+    if(S.cargando) h += '<div class="cargando">Cargando…</div>';
+    else if(!S.mapa) h += '<div class="vacio">No se pudo leer el mapa.</div>';
+    else {
+      h += '<div class="filtro">' +
+           '<button data-a="mapaColor" data-c="antiguedad"' + (S.mapaColor==="antiguedad"?' class="on"':'') + '>Por antigüedad</button>' +
+           '<button data-a="mapaColor" data-c="cantidad"' + (S.mapaColor==="cantidad"?' class="on"':'') + '>Por cantidad</button>' +
+           '</div>';
+
+      h += '<input class="buscador" id="qMapa" value="' + esc(S.mapaProv) +
+           '" placeholder="Marcar dónde están las bolsas de…">';
+
+      if(S.mapaColor === "antiguedad"){
+        h += '<div class="leyenda"><span><i style="background:#C0DD97"></i>menos de 1 mes</span>' +
+             '<span><i style="background:#FAC775"></i>más de 1 mes</span>' +
+             '<span><i style="background:#F7C1C1"></i>más de 2 meses</span>' +
+             '<span><i style="background:#F1EFE8"></i>vacío</span></div>';
+      } else {
+        h += '<div class="leyenda"><span><i style="background:#C0DD97"></i>con lugar</span>' +
+             '<span><i style="background:#FAC775"></i>casi lleno</span>' +
+             '<span><i style="background:#F7C1C1"></i>lleno</span>' +
+             '<span><i style="background:#F1EFE8"></i>vacío</span></div>';
+      }
+
+      var porAmb = {}, ordenAmb = [];
+      S.mapa.muebles.forEach(function(m){
+        var amb = ambienteDe(m.mueble || m.nombre);
+        if(!porAmb[amb]){ porAmb[amb] = []; ordenAmb.push(amb); }
+        porAmb[amb].push(m);
+      });
+      ordenAmb.sort(function(a, b){
+        var oa = 0, ob = 0;
+        AMBIENTES.forEach(function(x, i){ if(x.nombre === a) oa = i; if(x.nombre === b) ob = i; });
+        return oa - ob;
+      });
+
+      var marcados = 0;
+      ordenAmb.forEach(function(amb){
+        h += '<div class="amb"><h3>' + esc(amb) + '</h3>';
+        porAmb[amb].forEach(function(m){
+          h += '<div class="mu"><div class="nom">' + esc(m.nombre) + '</div>';
+          var lugares = m.lugares.slice().sort(function(x, y){
+            return ordenLugar(x.ubicacion) - ordenLugar(y.ubicacion);
+          });
+          lugares.forEach(function(l){
+            var c = colorLugar(l);
+            var mark = lugarTieneProv(l);
+            if(mark) marcados++;
+            h += '<div class="est' + (mark ? ' marcado' : '') + '" data-a="abrirLugar" data-m="' +
+                 esc(l.mueble) + '" data-u="' + esc(l.ubicacion) + '"' +
+                 ' style="background:' + c.fondo + ';color:' + c.texto + '">' +
+                 '<span class="u">' + esc(l.ubicacion) + '</span>' +
+                 '<span class="d">' + esc(c.nota) + '</span></div>';
+          });
+          h += '</div>';
+        });
+        h += '</div>';
+      });
+
+      if(S.mapaProv.trim()){
+        h += '<div class="nota">' + (marcados
+             ? marcados + (marcados===1 ? ' lugar marcado' : ' lugares marcados') + ' con bolsas de esa proveedora.'
+             : 'Esa proveedora no tiene bolsas guardadas.') + '</div>';
+      }
+
+      if(S.mapa.huerfanas && S.mapa.huerfanas.length){
+        h += '<div class="nota">Hay ' + S.mapa.huerfanas.length +
+             ' bolsas en lugares que ya no están en la hoja Ubicaciones: ' +
+             esc(S.mapa.huerfanas.map(function(b){ return b.proveedora; }).join(", ")) + '</div>';
+      }
+    }
+    h += '<button class="volver" data-a="ir" data-s="menuDep">← Volver</button>';
+  }
+
+  else if(S.screen === "mover"){
+    h += '<div class="titulo-prov">Mover ' + esc(S.moverBolsa || "") + '</div>';
+    h += vElegirLugar("lugarMover");
+    h += '<button class="volver" data-a="atras">← Cancelar</button>';
+  }
+
+  else if(S.screen === "deposito"){
+    h += '<div class="acc" style="margin:0 0 6px"><button class="prim" data-a="ir" data-s="cargarMueble">Cargar bolsas</button></div>';
+    h += '<div class="acc" style="margin:0 0 16px"><button data-a="ir" data-s="mapa">Ver mapa del depósito</button></div>';
+    h += '<input class="buscador" id="qDep" value="' + esc(S.depQuery) + '" placeholder="Buscar proveedora por nombre o número">';
+    if(S.depBuscando) h += '<div class="cargando">Buscando…</div>';
+    else {
+      S.depResultados.forEach(function(p){
+        h += '<div class="card" style="cursor:default">' +
+             '<div style="font-size:16px;font-weight:600">' + esc(p.num) + ' — ' + esc(p.nombre) + '</div>' +
+             '<div class="prov" style="margin-top:2px">' +
+             (p.bolsas.length ? p.bolsas.length + (p.bolsas.length===1?' bolsa en depósito':' bolsas en depósito') : 'sin bolsas guardadas') +
+             '</div></div>';
+        if(p.bolsas.length){
+          var lugares = {};
+          p.bolsas.forEach(function(b){ lugares[(b.mueble ? b.mueble + " · " : "") + b.ubicacion] = true; });
+          h += '<div class="nota" style="margin:-4px 0 10px">Tiene que llevarse ' + p.bolsas.length +
+               (p.bolsas.length===1?' bolsa':' bolsas') + '. Están en: ' + esc(Object.keys(lugares).join(" / ")) + '</div>';
+          var stock = p.bolsas.filter(function(b){ return b.tipo === "Para hacer stock"; });
+          if(stock.length){
+            h += '<div class="nota" style="margin:-4px 0 10px;background:' + TAN + '22;color:' + TAN +
+                 '">Ojo: ' + stock.length + (stock.length===1?' bolsa espera':' bolsas esperan') + ' que le hagan stock, en ' +
+                 esc(stock.map(function(b){ return (b.mueble ? b.mueble + " · " : "") + b.ubicacion; }).join(" / ")) + '</div>';
+          }
+          p.bolsas.forEach(function(b){
+            h += '<div class="card" style="cursor:default">' +
+                 '<div class="fila"><div class="cod">' + esc(b.nro) + '</div>' +
+                 '<span class="tag" style="background:' + colorTipo(b.tipo) + '22;color:' + colorTipo(b.tipo) + '">' +
+                 esc(etiquetaTipo(b.tipo)) + '</span></div>' +
+                 '<div class="prod">' + esc(b.mueble ? b.mueble + " · " + b.ubicacion : b.ubicacion) + '</div>' +
+                 '<div class="fecha">' + (b.cantidad ? b.cantidad + ' prendas · ' : '') +
+                 (b.fecha ? 'desde ' + fechaCorta(b.fecha) : '') + '</div>' +
+                 '<div class="acc"><button data-a="mover" data-nro="' + esc(b.nro) + '">Cambiar de lugar</button>' +
+                 '<button data-a="entregar" data-nro="' + esc(b.nro) + '">' +
+                 (b.tipo === "Para hacer stock" ? "Ya le hice el stock" : "La retiró") + '</button>' +
+                 '<button class="borrar" data-a="anular" data-nro="' + esc(b.nro) + '" data-nom="' +
+                 esc(p.nombre) + '">Eliminar</button></div></div>';
+          });
+          h += '<div class="acc" style="margin:-4px 0 18px"><button class="wa" data-a="entregarTodo" data-num="' +
+               esc(p.num) + '" data-nom="' + esc(p.nombre) + '">Retiró todo (' + p.bolsas.length +
+               (p.bolsas.length===1?' bolsa)':' bolsas)') + '</button></div>';
+        }
+      });
+      if(S.depTotal && S.depTotal > S.depResultados.length)
+        h += '<div class="nota">Hay ' + S.depTotal + ' proveedoras que coinciden. Escribí un poco más para achicar la lista.</div>';
+      if(!S.depResultados.length && S.depQuery.trim().length >= 1)
+        h += '<div class="vacio">No se encontró ninguna proveedora.</div>';
+    }
+    h += '<button class="volver" data-a="ir" data-s="home">← Volver</button>';
+  }
+
+  else if(S.screen === "revision"){
+    var c4 = "";
+    S.revisiones.forEach(function(p){ c4 += vPrenda(p, true); });
+    h += vListaEstado("No hay prendas marcadas para revisar.", c4);
+    h += '<button class="volver" data-a="ir" data-s="home">← Volver</button>';
+  }
+
+  var nav = document.getElementById("nav");
+  if(S.screen === "home"){
+    nav.innerHTML = "";
+  } else {
+    nav.innerHTML = '<div class="nav"><button data-a="atras">← Volver</button>' +
+                    '<button class="inicio" data-a="ir" data-s="home">Inicio</button></div>';
+  }
+
+  var app = document.getElementById("app");
+  app.innerHTML = h;
+
+  var qp = document.getElementById("qProv");
+  if(qp){ qp.focus(); qp.setSelectionRange(qp.value.length, qp.value.length); }
+  var qc = document.getElementById("qCod");
+  if(qc){ qc.focus(); qc.setSelectionRange(qc.value.length, qc.value.length); }
+  var qb2 = document.getElementById("qProvB");
+  if(qb2){ qb2.focus(); qb2.setSelectionRange(qb2.value.length, qb2.value.length); }
+  var qd = document.getElementById("qDep");
+  if(qd){ qd.focus(); qd.setSelectionRange(qd.value.length, qd.value.length); }
+  var qm = document.getElementById("qMapa");
+  if(qm){ qm.focus(); qm.setSelectionRange(qm.value.length, qm.value.length); }
+  var ni = document.getElementById("notaInput");
+  if(ni){ ni.focus(); ni.setSelectionRange(ni.value.length, ni.value.length); }
+
+  if(!S.cargando) escribiendo = false;
+}
+
+/* ---------------- eventos ---------------- */
+var timerBusqueda = null, busquedaId = 0;
+
+function refrescarCod(){
+  var c = document.getElementById("listaCod");
+  if(c) c.innerHTML = htmlListaCod(); else render();
+}
+
+document.addEventListener("input", function(ev){
+  var t = ev.target;
+  if(t.id === "qProv"){
+    S.provQuery = t.value;
+    var cont = document.getElementById("listaProv");
+    if(cont) cont.innerHTML = htmlListaProv(); else render();
+    return;
+  }
+  if(t.id === "qMapa"){ S.mapaProv = t.value; render(); return; }
+  if(t.id === "notaInput"){ S.notaTexto = t.value; return; }
+  if(t.id === "bolsaCant"){ S.bolsaCantidad = t.value; return; }
+  if(t.id === "bolsaNota"){ S.bolsaNotas = t.value; return; }
+  if(t.id === "qProvB"){
+    S.provBusq = t.value;
+    var contPB = document.getElementById("listaProvBolsa");
+    if(contPB) contPB.innerHTML = htmlListaProvBolsa(); else render();
+    return;
+  }
+  if(t.id === "qDep"){
+    S.depQuery = t.value;
+    if(timerDep) clearTimeout(timerDep);
+    var qd = t.value;
+    timerDep = setTimeout(function(){ buscarDeposito(qd); }, 450);
+    return;
+  }
+  if(t.id === "qCod"){
+    S.codQuery = t.value;
+    var q = t.value.trim();
+    if(timerBusqueda) clearTimeout(timerBusqueda);
+    if(q.length < 2){ S.resultados = []; S.buscando = false; refrescarCod(); return; }
+    S.buscando = true; refrescarCod();
+    var mio = ++busquedaId;
+    timerBusqueda = setTimeout(function(){
+      api("devolBuscar", {q:q}).then(function(r){
+        if(mio !== busquedaId) return;
+        S.resultados = r.prendas; S.buscando = false; refrescarCod();
+      }).catch(function(){
+        if(mio !== busquedaId) return;
+        S.resultados = []; S.buscando = false; refrescarCod();
+      });
+    }, 450);
+  }
+});
+
+/* Acciones que escriben en el Sheet. Mientras una está en curso,
+   los toques siguientes se ignoran: apretar quince veces guarda
+   una sola bolsa, no quince. */
+var ACC_ESCRIBEN = {elegiTipo:1, entregar:1, entregarTodo:1, anular:1, mover:1,
+                    marcar:1, guardarNota:1, yaAvise:1};
+var escribiendo = false;
+
+document.addEventListener("click", function(ev){
+  var el = ev.target.closest("[data-a]");
+  if(!el) {
+    if(S.ordenAbierto){ S.ordenAbierto = false; render(); }
+    return;
+  }
+  var a = el.getAttribute("data-a");
+
+  if(ACC_ESCRIBEN[a]){
+    if(escribiendo) return;          // ya hay una guardando: no duplicar
+    escribiendo = true;
+    el.classList.add("apretado");    // se apaga al toque, sin esperar
+    setTimeout(function(){ escribiendo = false; }, 12000); // red de seguridad
+  }
+
+  if(a === "escanear"){ abrirCamara(); return; }
+
+  if(a === "mapaColor"){ S.mapaColor = el.getAttribute("data-c"); render(); return; }
+
+  if(a === "ir"){ ir(el.getAttribute("data-s")); return; }
+
+  if(a === "atras"){
+    if(S.screen === "itemsProv") ir("buscarProv");
+    else if(S.screen === "lugar") ir("cargarMueble");
+    else if(S.screen === "elegirProv") { S.screen = "lugar"; render(); }
+    else if(S.screen === "elegirTipo"){
+      if(S.origenCarga === "lugar"){ S.screen = "elegirProv"; render(); }
+      else if(S.prov){ S.screen = "itemsProv"; render(); }
+      else ir("deposito");
+    }
+    else if(S.screen === "elegirLugarNueva"){ S.screen = "elegirTipo"; render(); }
+    else if(S.screen === "cantBolsas"){ S.screen = "elegirTipo"; render(); }
+    else if(S.screen === "mover" || S.screen === "cargarMueble") ir("deposito");
+    else if(S.screen === "mapa" || S.screen === "deposito" ||
+            S.screen === "pendientes" || S.screen === "revision") ir("menuDep");
+    else if(S.screen === "buscarCodigo" || S.screen === "buscarProv") ir("menuDevol");
+    else ir("home");
+    return;
+  }
+
+  if(a === "abrirLugar"){
+    S.origenCarga = "lugar";
+    S.lugarSel = {mueble:el.getAttribute("data-m"), ubicacion:el.getAttribute("data-u")};
+    cargarMapa("lugar");
+    return;
+  }
+
+  if(a === "agregarAca"){
+    S.origenCarga = "lugar";
+    S.nueva = {prov:null, tipo:null, mueble:S.lugarSel.mueble, ubicacion:S.lugarSel.ubicacion};
+    S.provBusq = ""; S.provLista = []; S.bolsaCantidad = "";
+    S.screen = "elegirProv"; render();
+    cargarProvTodas().then(render);
+    return;
+  }
+
+  if(a === "abrirBolsa" || a === "nuevaBolsa"){
+    S.origenCarga = "prov";
+    var num = el.getAttribute("data-num");
+    var nom = el.getAttribute("data-nom") || (S.prov ? S.prov.nombre : num);
+    S.nueva = {prov:{num:num, nombre:nom}, tipo:null, mueble:null, ubicacion:null};
+    S.bolsaCantidad = "";
+    S.screen = "elegirTipo"; render();
+    return;
+  }
+
+  if(a === "elegiProv"){
+    S.nueva.prov = {num:el.getAttribute("data-num"), nombre:el.getAttribute("data-nom")};
+    S.screen = "elegirTipo"; render();
+    return;
+  }
+
+  if(a === "elegiTipo"){
+    S.nueva.tipo = el.getAttribute("data-t");
+    if(S.nueva.ubicacion){ escribiendo = false; S.screen = "cantBolsas"; render(); }
+    else { S.bolsaMueble = null; cargarUbicaciones().then(function(){ S.screen = "elegirLugarNueva"; render(); }); }
+    return;
+  }
+
+  if(a === "lugarNueva"){
+    S.nueva.mueble = el.getAttribute("data-m");
+    S.nueva.ubicacion = el.getAttribute("data-u");
+    S.screen = "cantBolsas"; render();
+    return;
+  }
+
+  if(a === "elegiCant"){
+    if(escribiendo) return;
+    escribiendo = true;
+    el.classList.add("apretado");
+    crearVariasBolsas(el.getAttribute("data-n"));
+    return;
+  }
+
+  if(a === "mueble"){ S.bolsaMueble = el.getAttribute("data-m") || null; render(); return; }
+
+  if(a === "mover"){
+    S.moverBolsa = el.getAttribute("data-nro"); S.bolsaMueble = null;
+    cargarUbicaciones().then(function(){ S.screen = "mover"; render(); });
+    return;
+  }
+
+  if(a === "lugarMover"){ moverBolsa(el.getAttribute("data-u"), el.getAttribute("data-m")); return; }
+
+  if(a === "refrescar"){
+    api("devolRefrescar").then(function(){
+      S.provs = []; S.items = []; S.mapa = null; S.ubicaciones = [];
+      S.depResultados = []; S.grupos = []; S.revisiones = [];
+      aviso("Datos actualizados");
+      cargarResumen();
+    }).catch(function(e){ aviso(e.message, GRAY); });
+    return;
+  }
+
+  if(a === "entregar"){ entregarBolsa(el.getAttribute("data-nro")); return; }
+
+  if(a === "anular"){
+    var nro = el.getAttribute("data-nro");
+    if(!window.confirm("¿Eliminar la bolsa " + nro + " de " + (el.getAttribute("data-nom")||"") +
+       "?\n\nEs para cuando se cargó mal. Sus prendas vuelven a quedar sin bolsa.")) return;
+    api("devolBolsaAnular", {bolsa:nro}).then(function(r){
+      aviso("Bolsa " + r.nro + " eliminada");
+      S.ubicaciones = [];
+      if(S.screen === "lugar") cargarMapa("lugar");
+      else buscarDeposito(S.depQuery, true);
+    }).catch(function(e){ aviso("No se pudo: " + e.message, GRAY); });
+    return;
+  }
+  if(a === "entregarTodo"){ entregarTodo(el.getAttribute("data-num"), el.getAttribute("data-nom")); return; }
+
+  if(a === "yaAvise"){ yaAvise(el.getAttribute("data-num")); return; }
+
+  if(a === "copiar" || a === "wa"){
+    var n = el.getAttribute("data-num");
+    var g = S.grupos.filter(function(x){ return String(x.num) === String(n); })[0];
+    if(!g) return;
+    if(a === "copiar") copiar(mensajeWa(g));
+    else window.open("https://wa.me/" + g.wa + "?text=" + encodeURIComponent(mensajeWa(g)), "_blank");
+    return;
+  }
+
+  if(a === "reintentar"){
+    if(S.screen === "buscarProv") cargar("provs");
+    else if(S.screen === "itemsProv") cargar("items");
+    else if(S.screen === "pendientes") cargar("grupos");
+    else if(S.screen === "revision") cargar("revisiones");
+    return;
+  }
+});
+
+document.addEventListener("keydown", function(ev){
+  if(ev.key === "Enter" && ev.target.id === "notaInput"){
+    var b = document.querySelector('[data-a="guardarNota"]');
+    if(b) b.click();
+  }
+});
+
+/* ============================================================
+   ENTRADA POR QR
+   El QR de cada estante abre esta misma app con la ubicacion
+   en la direccion, por ejemplo:
+     ...index.html?u=Estante%204&m=Placard%20escritorio%20espejo
+   Si viene con ?u=, salteamos el menu y abrimos ese lugar
+   directo. Si no viene nada, la app arranca como siempre.
+   ============================================================ */
+function paramUrl(nombre){
+  var m = new RegExp("[?&]" + nombre + "=([^&#]*)").exec(window.location.search);
+  return m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : "";
+}
+
+function abrirLugarDesdeQR(){
+  var u = paramUrl("u");
+  if(!u) return false;
+  var m = paramUrl("m");
+
+  S.lugarSel = {mueble:m, ubicacion:u};
+  S.screen = "lugar";
+  S.cargando = true;
+  render();
+
+  api("devolMapa").then(function(r){
+    S.mapa = r;
+    S.cargando = false;
+    // Chequear que el lugar del QR exista de verdad en la hoja Ubicaciones.
+    var existe = false;
+    r.muebles.forEach(function(mu){
+      mu.lugares.forEach(function(l){
+        if(l.ubicacion === u && (!m || l.mueble === m)) existe = true;
+      });
+    });
+    render();
+    if(!existe) aviso("Ese lugar no figura en la hoja Ubicaciones", GRAY);
+  }).catch(function(e){
+    S.cargando = false; render();
+    aviso("No se pudo leer el depósito: " + e.message, GRAY);
+  });
+  return true;
+}
+
+document.getElementById("camCerrar").addEventListener("click", cerrarCamara);
+
+if(!abrirLugarDesdeQR()){
+  render();
+  cargarResumen();
+}
+</script>
+</body>
+</html>
