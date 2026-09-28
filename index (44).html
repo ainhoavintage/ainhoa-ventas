@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ainhoa · Cargar Venta</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f7;
+  --bg2: #f3f1ed;
+  --bg3: #ece9e3;
+  --border: #ddd9d0;
+  --dark: #1a1712;
+  --brown: #6b5c3e;
+  --gold: #9a7e42;
+  --text: #3a3228;
+  --muted: #9e8f7a;
+  --green: #4a7c59;
+  --green-bg: #edf5f0;
+  --green-border: #c0ddc9;
+  --red: #b85c5c;
+  --red-bg: #f8eeee;
+  --red-border: #e6c9c9;
+  --amber: #8a6a1f;
+  --amber-bg: #fbf4e4;
+  --amber-border: #eddcb2;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+
+header { background: var(--dark); padding: 20px 24px 16px; text-align: center; }
+.brand { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: #f0ead8; letter-spacing: 0.18em; text-transform: uppercase; }
+.brand-sub { font-size: 10px; letter-spacing: 0.28em; color: #e8d08a; text-transform: uppercase; margin-top: 3px; }
+
+main { max-width: 600px; margin: 0 auto; padding: 28px 16px 60px; }
+
+#login-screen { display: flex; flex-direction: column; align-items: center; padding-top: 40px; }
+.login-box {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 36px 32px; width: 100%; max-width: 380px;
+  display: flex; flex-direction: column; gap: 18px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+.login-box h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--dark); text-align: center; }
+
+#app { display: none; }
+.section-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 14px; }
+.section-card h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300;
+  color: var(--dark); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+
+.input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.input-group:last-child { margin-bottom: 0; }
+.form-row > .input-group, .form-row > .input-group:last-child { margin-bottom: 14px; }
+.input-group label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+
+input[type="text"], input[type="number"], input[type="password"], select {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--dark); font-family: 'DM Sans', sans-serif; font-size: 15px;
+  padding: 11px 13px; width: 100%; outline: none;
+  transition: border-color 0.2s; -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus { border-color: var(--brown); }
+input::placeholder { color: var(--muted); }
+input[readonly] { color: var(--brown); background: var(--bg3); }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+.ayuda { font-size: 12px; color: var(--brown); margin-top: -6px; margin-bottom: 12px; min-height: 0; }
+.ayuda:empty { display: none; }
+
+.prenda-preview { background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 10px; padding: 16px; margin-bottom: 14px; display: none; }
+.prenda-preview .cod { font-size: 10px; letter-spacing: 0.14em; color: var(--gold); font-weight: 500; text-transform: uppercase; margin-bottom: 4px; }
+.prenda-preview .desc { font-size: 14px; color: var(--dark); font-weight: 500; margin-bottom: 8px; }
+.prenda-preview .meta { display: flex; gap: 16px; flex-wrap: wrap; }
+.prenda-preview .meta span { font-size: 12px; color: var(--muted); }
+.prenda-preview .meta strong { color: var(--dark); }
+
+.estado { display: inline-block; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 3px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+.estado.stock { background: #fff; color: var(--green); border: 1px solid var(--green-border); }
+.estado.vendida, .estado.devuelta { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.estado.otro { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+
+.aviso { font-size: 13px; padding: 12px 14px; border-radius: 10px; margin-bottom: 14px; }
+.aviso.rojo { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.aviso.ambar { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+
+button.primary {
+  background: var(--dark); border: none; border-radius: 10px; color: #f0ead8; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.16em;
+  padding: 14px; text-transform: uppercase; width: 100%; transition: background 0.2s;
+}
+button.primary:hover { background: #2e2a22; }
+button.primary:disabled { background: var(--muted); cursor: not-allowed; }
+button.secondary {
+  background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--text); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.14em; padding: 10px 18px;
+  text-transform: uppercase; transition: border-color 0.2s;
+}
+button.secondary:hover { border-color: var(--brown); }
+
+.error-msg { font-size: 12px; color: var(--red); text-align: center; min-height: 16px; }
+.success-msg { font-size: 13px; color: var(--green); padding: 12px; background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 10px; text-align: center; }
+
+.app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.app-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; color: var(--dark); }
+
+.reciente-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.reciente-item:last-child { border-bottom: none; }
+.reciente-cod { font-size: 10px; color: var(--gold); font-weight: 500; letter-spacing: 0.1em; margin-bottom: 2px; }
+.reciente-desc { color: var(--dark); }
+.reciente-right { text-align: right; flex-shrink: 0; }
+.reciente-importe { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--dark); }
+.reciente-fecha { font-size: 10px; color: var(--muted); }
+
+.loader { display: flex; align-items: center; gap: 10px; padding: 20px 0; color: var(--muted); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">ainhoa</div>
+  <div class="brand-sub">Cargar Venta</div>
+</header>
+
+<main>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h2>Acceso</h2>
+    <div class="input-group">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <button class="primary" onclick="doLogin()" id="btn-login">Ingresar</button>
+    <div class="error-msg" id="login-error"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="app-header">
+    <h2>Nueva venta</h2>
+    <button class="secondary" onclick="doLogout()">Salir</button>
+  </div>
+
+  <!-- PASO 1: CÓDIGO -->
+  <div class="section-card">
+    <h3>Código de prenda</h3>
+    <div class="input-group">
+      <label>Código</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="codigo" placeholder="Ej: 103-3" style="flex:1;" onkeydown="if(event.key==='Enter') buscarPrenda()">
+        <button class="secondary" onclick="buscarPrenda()" style="white-space:nowrap;padding:11px 16px;">Buscar</button>
+      </div>
+    </div>
+    <div id="buscar-loader" style="display:none;" class="loader"><div class="spinner"></div><span>Buscando...</span></div>
+    <div id="prenda-preview" class="prenda-preview">
+      <div class="cod"><span id="prev-cod"></span><span id="prev-estado"></span></div>
+      <div class="desc" id="prev-desc"></div>
+      <div class="meta">
+        <span>Talle: <strong id="prev-talle">—</strong></span>
+        <span>Efectivo: <strong id="prev-precio-manual">—</strong></span>
+        <span>Transf/Tarjeta: <strong id="prev-precio-tj">—</strong></span>
+        <span>Proveedora: <strong id="prev-prov">—</strong></span>
+      </div>
+    </div>
+    <div id="estado-aviso"></div>
+    <div class="error-msg" id="buscar-error"></div>
+  </div>
+
+  <!-- RESERVA PENDIENTE -->
+  <div class="section-card" id="reserva-card" style="display:none;">
+    <h3>Reserva sin pagar</h3>
+    <div class="aviso ambar" id="reserva-info"></div>
+    <div class="form-row">
+      <div class="input-group">
+        <label>Medio de pago</label>
+        <select id="reserva-medio" onchange="reservaCambioMedio()">
+          <option value="Transferencia">Transferencia</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Importe final ($)</label>
+        <input type="number" id="reserva-importe">
+      </div>
+    </div>
+    <div class="ayuda">Al confirmar, esa misma venta pasa a Vendido y la prenda queda Vendida.</div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="secondary" onclick="resetForm()" style="flex:1;">Cancelar</button>
+      <button class="primary" onclick="confirmarReserva()" id="btn-reserva" style="flex:2;">Confirmar pago</button>
+    </div>
+    <div style="margin-top:12px;" id="reserva-feedback"></div>
+  </div>
+
+  <!-- PASO 2: DATOS DE VENTA -->
+  <div class="section-card" id="form-venta" style="display:none;">
+    <h3>Datos de la venta</h3>
+
+    <div class="form-row">
+      <div class="input-group">
+        <label>Fecha</label>
+        <input type="text" id="venta-fecha" readonly>
+      </div>
+      <div class="input-group">
+        <label>Cliente (@ o nombre)</label>
+        <input type="text" id="venta-cliente" placeholder="@instagram">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="input-group">
+        <label>Medio de pago</label>
+        <select id="venta-medio" onchange="recalcularImporte()">
+          <option value="">Seleccionar</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Descuento (%)</label>
+        <input type="text" id="venta-descuento" inputmode="decimal" placeholder="Ej: 20" oninput="recalcularImporte()">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Importe final ($)</label>
+      <input type="number" id="venta-importe" placeholder="Elegí el medio de pago" oninput="importeEscritoAMano()">
+    </div>
+    <div class="ayuda" id="importe-info"></div>
+
+    <div class="form-row" style="align-items:flex-end;">
+      <div class="input-group">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="venta-pago-completo" checked onchange="togglePagoParcial()" style="width:auto;">
+          Pago completo
+        </label>
+      </div>
+      <div class="input-group" id="wrap-monto-pagado" style="display:none;">
+        <label>Monto pagado ahora ($)</label>
+        <input type="number" id="venta-monto-pagado" placeholder="0" oninput="mostrarSaldoCliente()">
+      </div>
+    </div>
+    <div class="ayuda" id="saldo-cliente-info"></div>
+
+    <div class="form-row">
+      <div class="input-group">
+        <label>Condición</label>
+        <select id="venta-condicion">
+          <option value="Vendido">Vendido</option>
+          <option value="Reservado">Reservado (no pagó)</option>
+          <option value="No vendido">No vendido</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Envío / Retiro</label>
+        <select id="venta-envio">
+          <option value="">—</option>
+          <option value="Envío">Envío</option>
+          <option value="Retiro">Retiro</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Notas (opcional)</label>
+      <input type="text" id="venta-notas" placeholder="Ej: falta pagar 1000...">
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="secondary" onclick="resetForm()" style="flex:1;">Cancelar</button>
+      <button class="primary" onclick="guardarVenta()" id="btn-guardar" style="flex:2;">Guardar venta</button>
+    </div>
+    <div style="margin-top:12px;" id="guardar-feedback"></div>
+  </div>
+
+  <!-- VENTAS RECIENTES -->
+  <div class="section-card">
+    <h3>Últimas ventas cargadas</h3>
+    <div id="recientes-loader" class="loader"><div class="spinner"></div><span>Cargando...</span></div>
+    <div id="recientes-list"></div>
+  </div>
+</div>
+</main>
+
+<script>
+
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZbEeODB-LF71H32WLSJafEKpl4sQNzMEiNQ2nvxK6LjNc1pmX0NMEbKSi5s7EXk9d/exec';
+const FACTOR_RECARGO = 0.85;   // precio transf/tarjeta = efectivo / 0,85
+
+let prendaActual = null;
+
+function el(id) { return document.getElementById(id); }
+
+async function api(action, params = {}) {
+  const url = new URL(APPS_SCRIPT_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return '$' + Math.round(n).toLocaleString('es-AR');
+}
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function fechaHoy() {
+  const d = new Date();
+  return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+}
+
+function conRecargo(medio) { return medio === 'Transferencia' || medio === 'Tarjeta'; }
+
+// ---------- LOGIN ----------
+async function doLogin() {
+  const pass = el('login-pass').value;
+  const errEl = el('login-error');
+  const btn = el('btn-login');
+  errEl.textContent = '';
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  try {
+    const res = await api('checkAdminPass', { pass });
+    if (res && res.ok) {
+      el('login-screen').style.display = 'none';
+      el('app').style.display = 'block';
+      el('venta-fecha').value = fechaHoy();
+      cargarRecientes();
+    } else {
+      errEl.textContent = 'Contraseña incorrecta.';
+    }
+  } catch (e) {
+    errEl.textContent = 'Error de conexión.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Ingresar';
+  }
+}
+
+function doLogout() {
+  el('login-screen').style.display = 'flex';
+  el('app').style.display = 'none';
+  el('login-pass').value = '';
+  resetForm();
+}
+
+// ---------- BUSCAR PRENDA ----------
+function claseEstado(est) {
+  if (!est) return 'stock';
+  if (est === 'Vendida') return 'vendida';
+  if (est === 'Devuelta') return 'devuelta';
+  return 'otro';
+}
+
+async function buscarPrenda() {
+  const codigo = el('codigo').value.trim();
+  const errEl = el('buscar-error');
+  ocultarTodo();
+  if (!codigo) { errEl.textContent = 'Ingresá un código.'; return; }
+  el('buscar-loader').style.display = 'flex';
+  try {
+    const res = await api('getPrenda', { codigo });
+    if (!res || !res.ok) { errEl.textContent = (res && res.error) || 'Prenda no encontrada.'; return; }
+    prendaActual = res.prenda;
+    const p = prendaActual;
+    const est = p.estado || '';
+
+    el('prev-cod').textContent = p.codigo;
+    el('prev-estado').innerHTML = '<span class="estado ' + claseEstado(est) + '">' + esc(est || 'En stock') + '</span>';
+    el('prev-desc').textContent = p.producto;
+    el('prev-talle').textContent = p.talle || '—';
+    el('prev-precio-manual').textContent = fmt(p.precioManual);
+    el('prev-precio-tj').textContent = fmt(precioDelMedio('Transferencia'));
+    el('prev-prov').textContent = p.proveedorNombre ? (p.proveedorNombre + ' (' + (p.proveedor || '') + ')') : (p.proveedor || '—');
+    el('prenda-preview').style.display = 'block';
+
+    const aviso = el('estado-aviso');
+
+    // No se puede vender
+    if (est === 'Vendida' || est === 'Devuelta') {
+      aviso.innerHTML = '<div class="aviso rojo">Esta prenda figura como <strong>' + esc(est) + '</strong>. No se puede cargar una venta.</div>';
+      return;
+    }
+
+    // Tiene una reserva sin pagar: se confirma esa
+    if (p.reserva) {
+      mostrarReserva(p.reserva);
+      return;
+    }
+
+    if (est === 'Reservada') {
+      aviso.innerHTML = '<div class="aviso ambar">Figura como Reservada, pero no encontré la reserva en Ventas. Revisá antes de cargar.</div>';
+    } else if (est === 'Última Oportunidad') {
+      aviso.innerHTML = '<div class="aviso ambar">Está en <strong>Última Oportunidad</strong>.</div>';
+    } else if (est === 'Revisar') {
+      aviso.innerHTML = '<div class="aviso ambar">Está marcada para <strong>Revisar</strong>. Fijate antes de venderla.</div>';
+    } else if (est) {
+      aviso.innerHTML = '<div class="aviso ambar">Estado: <strong>' + esc(est) + '</strong>.</div>';
+    }
+
+    el('form-venta').style.display = 'block';
+    recalcularImporte();
+    el('venta-cliente').focus();
+  } catch (e) {
+    errEl.textContent = 'Error de conexión.';
+  } finally {
+    el('buscar-loader').style.display = 'none';
+  }
+}
+
+function ocultarTodo() {
+  el('buscar-error').textContent = '';
+  el('estado-aviso').innerHTML = '';
+  el('prenda-preview').style.display = 'none';
+  el('form-venta').style.display = 'none';
+  el('reserva-card').style.display = 'none';
+  el('guardar-feedback').innerHTML = '';
+  el('reserva-feedback').innerHTML = '';
+}
+
+// ---------- PRECIO Y DESCUENTO ----------
+// Precio de lista según el medio: efectivo o con recargo.
+function precioDelMedio(medio) {
+  if (!prendaActual || !medio) return 0;
+  const ef = prendaActual.precioManual || 0;
+  if (!conRecargo(medio)) return ef;
+  return prendaActual.precioTj || Math.round(ef / FACTOR_RECARGO);
+}
+
+// Lee "20", "20%", "20 %", "12,5" -> número. Vacío o raro -> 0.
+function leerDescuento() {
+  const txt = String(el('venta-descuento').value || '').replace('%', '').replace(',', '.').trim();
+  const n = parseFloat(txt);
+  if (!n || n < 0 || n >= 100) return 0;
+  return n;
+}
+
+function recalcularImporte() {
+  const info = el('importe-info');
+  if (!prendaActual) return;
+  const medio = el('venta-medio').value;
+  const desc = leerDescuento();
+  if (!medio) {
+    el('venta-importe').value = '';
+    info.textContent = desc ? 'Elegí el medio de pago para aplicar el descuento.' : '';
+    mostrarSaldoCliente();
+    return;
+  }
+  const lista = precioDelMedio(medio);
+  if (!lista) {
+    info.textContent = 'Esta prenda no tiene precio cargado. Escribí el importe a mano.';
+    return;
+  }
+  const final = Math.round(lista * (1 - desc / 100));
+  el('venta-importe').value = final;
+  const nombre = conRecargo(medio) ? 'Precio transf/tarjeta' : 'Precio efectivo';
+  info.textContent = desc
+    ? nombre + ' ' + fmt(lista) + ' − ' + desc + '% = ' + fmt(final)
+    : nombre + ' ' + fmt(lista);
+  mostrarSaldoCliente();
+}
+
+// Si escribe el importe a mano, vale lo que escribió.
+function importeEscritoAMano() {
+  if (el('venta-descuento').value) el('venta-descuento').value = '';
+  el('importe-info').textContent = el('venta-importe').value ? 'Importe escrito a mano.' : '';
+  mostrarSaldoCliente();
+}
+
+// ---------- PAGO PARCIAL ----------
+function togglePagoParcial() {
+  const completo = el('venta-pago-completo').checked;
+  el('wrap-monto-pagado').style.display = completo ? 'none' : 'block';
+  if (completo) el('venta-monto-pagado').value = '';
+  mostrarSaldoCliente();
+}
+
+function mostrarSaldoCliente() {
+  const info = el('saldo-cliente-info');
+  if (el('venta-pago-completo').checked) { info.textContent = ''; return; }
+  const importe = parseFloat(el('venta-importe').value) || 0;
+  const pagado = parseFloat(el('venta-monto-pagado').value) || 0;
+  const saldo = importe - pagado;
+  info.textContent = importe > 0 ? (saldo > 0 ? 'Queda pendiente de cobrar: ' + fmt(saldo) : 'Sin saldo pendiente.') : '';
+}
+
+// ---------- GUARDAR VENTA ----------
+async function guardarVenta() {
+  if (!prendaActual) return;
+  const feedbackEl = el('guardar-feedback');
+  const btn = el('btn-guardar');
+  feedbackEl.innerHTML = '';
+  const cliente = el('venta-cliente').value.trim();
+  const importe = el('venta-importe').value;
+  const medio = el('venta-medio').value;
+  const condicion = el('venta-condicion').value;
+  const envio = el('venta-envio').value;
+  let notas = el('venta-notas').value.trim();
+  const fecha = el('venta-fecha').value;
+  const pagoCompleto = el('venta-pago-completo').checked;
+  const montoPagado = pagoCompleto ? importe : (el('venta-monto-pagado').value || 0);
+
+  if (!cliente || !importe || !medio) {
+    feedbackEl.innerHTML = '<div class="error-msg">Completá cliente, medio de pago e importe.</div>';
+    return;
+  }
+
+  // El descuento queda anotado solo en Notas.
+  const desc = leerDescuento();
+  if (desc) notas = (notas ? notas + ' · ' : '') + '-' + desc + '% off';
+
+  btn.disabled = true; btn.textContent = 'Guardando...';
+  try {
+    const res = await api('registrarVenta', {
+      fecha, cliente, codigo: prendaActual.codigo,
+      producto: prendaActual.producto, talle: prendaActual.talle || '',
+      importe: parseFloat(importe), medio, condicion, envio, notas,
+      montoPagado: parseFloat(montoPagado)
+    });
+    if (res && res.success) {
+      feedbackEl.innerHTML = '<div class="success-msg">✓ Venta cargada correctamente</div>';
+      setTimeout(() => { resetForm(); cargarRecientes(); }, 1500);
+    } else {
+      feedbackEl.innerHTML = '<div class="error-msg">⚠️ ' + esc((res && res.error) || 'No se pudo confirmar. Revisá el Sheet antes de reintentar.') + '</div>';
+    }
+  } catch (e) {
+    feedbackEl.innerHTML = '<div class="error-msg">⚠️ Sin confirmación — puede haberse guardado igual. Revisá el Sheet.</div>';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Guardar venta';
+  }
+}
+
+// ---------- RESERVAS ----------
+let reservaActual = null;
+
+function mostrarReserva(r) {
+  reservaActual = r;
+  const saldo = r.saldo ? ' · debe ' + fmt(r.saldo) : '';
+  el('reserva-info').innerHTML =
+    'Reservada por <strong>' + esc(r.cliente || '—') + '</strong> el ' + esc(r.fecha || '—') +
+    '<br>' + fmt(r.importe) + ' por ' + esc(r.medio || 'medio sin cargar') + saldo;
+  const medio = ['Transferencia', 'Efectivo', 'Tarjeta'].indexOf(r.medio) > -1 ? r.medio : 'Transferencia';
+  el('reserva-medio').value = medio;
+  el('reserva-medio').dataset.anterior = medio;
+  el('reserva-importe').value = r.importe || '';
+  el('reserva-card').style.display = 'block';
+}
+
+// Si cambia de efectivo a transferencia (o al revés), ajusta el recargo.
+function reservaCambioMedio() {
+  const sel = el('reserva-medio');
+  const antes = sel.dataset.anterior;
+  const ahora = sel.value;
+  const imp = parseFloat(el('reserva-importe').value) || 0;
+  if (imp && conRecargo(antes) !== conRecargo(ahora)) {
+    el('reserva-importe').value = conRecargo(ahora) ? Math.round(imp / FACTOR_RECARGO) : Math.round(imp * FACTOR_RECARGO);
+  }
+  sel.dataset.anterior = ahora;
+}
+
+async function confirmarReserva() {
+  if (!prendaActual || !reservaActual) return;
+  const fb = el('reserva-feedback');
+  const btn = el('btn-reserva');
+  const importe = el('reserva-importe').value;
+  const medio = el('reserva-medio').value;
+  fb.innerHTML = '';
+  if (!importe) { fb.innerHTML = '<div class="error-msg">Falta el importe.</div>'; return; }
+  btn.disabled = true; btn.textContent = 'Guardando...';
+  try {
+    const res = await api('confirmarReserva', {
+      codigo: prendaActual.codigo, fila: reservaActual.fila,
+      importe: parseFloat(importe), medio
+    });
+    if (res && res.success) {
+      fb.innerHTML = '<div class="success-msg">✓ Reserva pagada, quedó Vendida</div>';
+      setTimeout(() => { resetForm(); cargarRecientes(); }, 1500);
+    } else {
+      fb.innerHTML = '<div class="error-msg">⚠️ ' + esc((res && res.error) || 'No se pudo confirmar. Revisá el Sheet.') + '</div>';
+    }
+  } catch (e) {
+    fb.innerHTML = '<div class="error-msg">⚠️ Sin confirmación — puede haberse guardado igual. Revisá el Sheet.</div>';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Confirmar pago';
+  }
+}
+
+// ---------- LIMPIAR ----------
+function resetForm() {
+  prendaActual = null;
+  reservaActual = null;
+  el('codigo').value = '';
+  ocultarTodo();
+  el('venta-cliente').value = '';
+  el('venta-importe').value = '';
+  el('venta-descuento').value = '';
+  el('importe-info').textContent = '';
+  el('venta-pago-completo').checked = true;
+  el('venta-monto-pagado').value = '';
+  el('wrap-monto-pagado').style.display = 'none';
+  el('saldo-cliente-info').textContent = '';
+  el('venta-medio').value = '';
+  el('venta-condicion').value = 'Vendido';
+  el('venta-envio').value = '';
+  el('venta-notas').value = '';
+  el('venta-fecha').value = fechaHoy();
+}
+
+// ---------- VENTAS RECIENTES ----------
+async function cargarRecientes() {
+  const lista = el('recientes-list');
+  el('recientes-loader').style.display = 'flex';
+  lista.innerHTML = '';
+  try {
+    const res = await api('getUltimasVentas', { n: 10 });
+    el('recientes-loader').style.display = 'none';
+    const ventas = res.ventas || [];
+    if (!ventas.length) { lista.innerHTML = '<div class="empty-state">No hay ventas cargadas aún</div>'; return; }
+    lista.innerHTML = ventas.map(v => {
+      const cond = String(v.condicion || '');
+      const chip = cond && cond !== 'Vendido'
+        ? ' <span class="estado otro">' + esc(cond) + '</span>' : '';
+      const saldo = v.saldo ? ' · debe ' + fmt(v.saldo) : '';
+      return `
+      <div class="reciente-item">
+        <div>
+          <div class="reciente-cod">${esc(v.codigo)}${chip}</div>
+          <div class="reciente-desc">${esc(v.producto)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">${esc(v.cliente)} · ${esc(v.medio)}${saldo}</div>
+        </div>
+        <div class="reciente-right">
+          <div class="reciente-importe">${fmt(v.importe)}</div>
+          <div class="reciente-fecha">${esc(v.fecha)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch (e) {
+    el('recientes-loader').style.display = 'none';
+    lista.innerHTML = '<div class="empty-state">Error al cargar</div>';
+  }
+}
+
+</script>
+</body>
+</html>
